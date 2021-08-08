@@ -1,4 +1,5 @@
 export { default as Snackbar } from './Snackbar'
+export { default as SplashScreen } from './SplashScreen'
 
 export {
   Colors,
