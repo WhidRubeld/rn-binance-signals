@@ -17,7 +17,7 @@ export const DefaultThemeColor = {
     primary: Colors.deepOrange900,
     accent: Colors.blueA700,
   },
-  roundness: 10,
+  // roundness: 10,
 }
 
 export const DarkThemeColor = {
@@ -29,5 +29,5 @@ export const DarkThemeColor = {
     primary: Colors.deepOrange900,
     accent: Colors.blueA700,
   },
-  roundness: 10,
+  // roundness: 10,
 }
