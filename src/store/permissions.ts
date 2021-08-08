@@ -23,7 +23,7 @@ export const permissionSlice = createSlice({
       state,
       { payload }: { payload: NotificationPermissionsStatus }
     ) {
-      state.data.foregroundGeolocation = payload
+      state.data.notifications = payload
     },
   },
 })
