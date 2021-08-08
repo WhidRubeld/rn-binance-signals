@@ -1,7 +1,7 @@
 import { Snackbar } from '@components'
 import { DefaultThemeColor } from '@constants'
 import { useDispatch } from '@hooks'
-// import Navigator from '@navigation'
+import Navigator from '@navigation'
 import {
   AppStateProvider,
   PaperProvider,
@@ -24,8 +24,7 @@ function App({ args }: { args: ResultType }) {
     // set store data
   }, [])
 
-  return null
-  // return <Navigator theme={DefaultThemeColor} />
+  return <Navigator theme={DefaultThemeColor} />
 }
 
 export default function Launcher(): ReactElement {
