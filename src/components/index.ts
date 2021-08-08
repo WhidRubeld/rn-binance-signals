@@ -1,5 +1,6 @@
 export { default as Snackbar } from './Snackbar'
 export { default as SplashScreen } from './SplashScreen'
+export { default as KeyboardAvoidingView } from './KeyboardAvoidingView'
 
 export {
   Colors,
