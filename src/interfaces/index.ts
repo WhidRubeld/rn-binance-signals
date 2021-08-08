@@ -1,0 +1,1 @@
+export { IPermissions } from './IPermissions'
