@@ -29,6 +29,7 @@ module.exports = function (api) {
             '@interfaces': './src/interfaces',
             '@navigation': './src/app/navigation',
             '@providers': './src/providers',
+            '@refs': './src/refs',
             '@screens': './src/screens',
             '@services': './src/services',
             '@store': './src/store',

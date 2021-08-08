@@ -22,6 +22,8 @@
       "@navigation/*": ["src/app/navigation/*"],
       "@providers": ["./src/providers"],
       "@providers/*": ["./src/providers/*"],
+      "@refs": ["./src/refs"],
+      "@refs/*": ["./src/refs/*"],
       "@screens": ["./src/screens"],
       "@screens/*": ["./src/screens/*"],
       "@services": ["./src/services"],
