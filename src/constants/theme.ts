@@ -4,7 +4,7 @@ import {
 } from '@react-navigation/native'
 import {
   DefaultTheme as PaperDefaultTheme,
-  Provider as PaperProvider,
+  DarkTheme as PaperDarkTheme,
   Colors,
 } from 'react-native-paper'
 
@@ -14,9 +14,20 @@ export const DefaultThemeColor = {
   colors: {
     ...NavigationDefaultTheme.colors,
     ...PaperDefaultTheme.colors,
-    primary: Colors.blueA700,
-    accent: Colors.orangeA400,
-    background: Colors.grey50,
+    primary: Colors.deepOrange900,
+    accent: Colors.blueA700,
+  },
+  roundness: 10,
+}
+
+export const DarkThemeColor = {
+  ...PaperDarkTheme,
+  ...NavigationDarkTheme,
+  colors: {
+    ...NavigationDarkTheme.colors,
+    ...PaperDarkTheme.colors,
+    primary: Colors.deepOrange900,
+    accent: Colors.blueA700,
   },
   roundness: 10,
 }

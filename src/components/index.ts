@@ -15,6 +15,7 @@ export {
   Badge,
   Banner,
   Chip,
+  Button,
   //
   Text,
   Subheading,
