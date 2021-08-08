@@ -1,24 +1,25 @@
-import 'react-native-gesture-handler'
+import App from '@app'
 import { StatusBar } from 'expo-status-bar'
+import moment from 'moment'
 import React from 'react'
+import { Platform, UIManager } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import 'moment/locale/ru'
 
-import useCachedResources from './hooks/useCachedResources'
-import useColorScheme from './hooks/useColorScheme'
-import Navigation from './navigation'
+moment.locale('ru')
 
-export default function App() {
-  const isLoadingComplete = useCachedResources()
-  const colorScheme = useColorScheme()
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true)
+}
 
-  if (!isLoadingComplete) {
-    return null
-  } else {
-    return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
-    )
-  }
+export default function Boot() {
+  return (
+    <SafeAreaProvider>
+      <App />
+      <StatusBar style="dark" />
+    </SafeAreaProvider>
+  )
 }
