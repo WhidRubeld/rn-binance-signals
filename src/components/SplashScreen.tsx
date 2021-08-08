@@ -47,7 +47,7 @@ export default function CustomSplashScreen({ loading }: { loading: boolean }) {
           { opacity, transform, backgroundColor: colors.surface },
         ]}
       >
-        <Image source={Splash} resizeMode="contain" />
+        <Image source={Splash} resizeMode="contain" style={styles.image} />
       </Animated.View>
     )
   }
@@ -58,6 +58,10 @@ export default function CustomSplashScreen({ loading }: { loading: boolean }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+  },
+  image: {
+    flex: 1,
   },
 })
