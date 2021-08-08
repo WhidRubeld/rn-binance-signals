@@ -19,7 +19,7 @@ export default function Boot() {
   return (
     <SafeAreaProvider>
       <App />
-      <StatusBar style="dark" />
+      <StatusBar style="auto" />
     </SafeAreaProvider>
   )
 }

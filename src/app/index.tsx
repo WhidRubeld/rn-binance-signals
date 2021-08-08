@@ -1,6 +1,6 @@
 import { Snackbar } from '@components'
-import { DefaultThemeColor } from '@constants'
-import { useDispatch } from '@hooks'
+import { DarkThemeColor, DefaultThemeColor } from '@constants'
+import { useDispatch, useColorScheme } from '@hooks'
 import Navigator from '@navigation'
 import {
   AppStateProvider,
@@ -10,12 +10,12 @@ import {
 } from '@providers'
 import { SnackbarRef } from '@refs'
 import Store from '@store'
-import React, { ReactElement, useLayoutEffect } from 'react'
+import React, { ReactElement, useLayoutEffect, useMemo } from 'react'
 
 import TaskManager, { ResultType } from './extra/TaskManager'
 import { defaultConfig, loadingTasks } from './tasks'
 
-function App({ args }: { args: ResultType }) {
+function App({ args, theme }: { args: ResultType; theme: any }) {
   const {} = args
 
   const dispatch = useDispatch()
@@ -24,17 +24,22 @@ function App({ args }: { args: ResultType }) {
     // set store data
   }, [])
 
-  return <Navigator theme={DefaultThemeColor} />
+  return <Navigator theme={theme} />
 }
 
 export default function Launcher(): ReactElement {
+  const scheme = useColorScheme()
+  const theme = useMemo(() => {
+    return scheme === 'dark' ? DarkThemeColor : DefaultThemeColor
+  }, [scheme])
+
   return (
-    <PaperProvider theme={DefaultThemeColor}>
+    <PaperProvider theme={theme}>
       <SnackbarProvider ref={SnackbarRef}>
         <ReduxProvider store={Store}>
           <AppStateProvider>
             <TaskManager tasks={loadingTasks} initialConfig={defaultConfig}>
-              {(args) => <App args={args} />}
+              {(args) => <App args={args} theme={theme} />}
             </TaskManager>
           </AppStateProvider>
         </ReduxProvider>
