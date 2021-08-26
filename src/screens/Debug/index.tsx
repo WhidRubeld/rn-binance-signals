@@ -49,9 +49,9 @@ const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Debug'>> = ({
       <Surface style={styles.blockButton}>
         <JSONTree data={appState} />
       </Surface>
-      <Subheading>Permissions state</Subheading>
+      <Subheading>Redux state</Subheading>
       <Surface style={styles.blockButton}>
-        <JSONTree data={reduxState.permissions as any} />
+        <JSONTree data={reduxState as any} />
       </Surface>
     </ScrollView>
   )

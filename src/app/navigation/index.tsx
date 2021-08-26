@@ -5,10 +5,10 @@ import {
   NavigationContainer,
   NavigationContainerRef,
 } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
 import React, { ReactElement, useRef, useEffect } from 'react'
 import { Host } from 'react-native-portalize'
 import { enableScreens } from 'react-native-screens'
+import { createNativeStackNavigator } from 'react-native-screens/native-stack'
 
 export type RootNavigatorParamList = {
   Tabs: undefined
@@ -16,7 +16,7 @@ export type RootNavigatorParamList = {
 
 enableScreens()
 
-const RootStack = createStackNavigator<RootNavigatorParamList>()
+const RootStack = createNativeStackNavigator<RootNavigatorParamList>()
 
 export default function Navigator({ theme }: any): ReactElement {
   const navigationRef = useRef<NavigationContainerRef>(null)
@@ -44,7 +44,7 @@ export default function Navigator({ theme }: any): ReactElement {
       onStateChange={onStateChange}
     >
       <Host>
-        <RootStack.Navigator initialRouteName="Tabs" mode="modal">
+        <RootStack.Navigator initialRouteName="Tabs">
           <RootStack.Screen
             name="Tabs"
             options={{ headerShown: false }}

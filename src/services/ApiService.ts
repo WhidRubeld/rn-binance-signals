@@ -6,7 +6,7 @@ import axios from 'axios'
 export default class ApiService {
   static async getPairKlines(
     pair: IPair,
-    interval: _interval,
+    interval: _interval = '4h',
     limit: number = 25
   ): Promise<ICandlestick[]> {
     return new Promise<ICandlestick[]>((resolve, reject) => {
