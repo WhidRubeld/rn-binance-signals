@@ -1,6 +1,5 @@
 import {
   Modalize,
-  Subheading,
   Title,
   Button,
   Portal,
@@ -16,8 +15,8 @@ import {
 } from '@hooks'
 import { IPair } from '@interfaces'
 import { ApiService } from '@services'
-import { addPair } from '@store/pairs'
-import React, { forwardRef, Ref, useCallback, useState } from 'react'
+import { addPair, changePair, removePair } from '@store/pairs'
+import React, { forwardRef, Ref, useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 const PairSettings = forwardRef(
@@ -36,26 +35,33 @@ const PairSettings = forwardRef(
     const [first, setFirst] = useState('')
     const [second, setSecond] = useState('')
 
-    const openHandler = useCallback(() => {
-      setStatus(true)
+    useEffect(() => {
       if (pair) {
         setFirst(pair.first)
         setSecond(pair.second)
       }
     }, [pair])
 
-    const closeHandler = () => {
+    const openHandler = useCallback(() => {
+      setStatus(true)
+    }, [])
+
+    const closeHandler = useCallback(() => {
       setStatus(false)
       setFirst('')
       setSecond('')
       onClose()
-    }
+    }, [onClose])
 
-    const submitHandler = () => {
+    const submitHandler = useCallback(() => {
       setLoading(true)
       ApiService.getPairKlines({ first, second })
-        .then((res) => {
-          dispatch(addPair({ first, second }))
+        .then(() => {
+          dispatch(
+            !pair
+              ? addPair({ first, second })
+              : changePair({ old: pair, new: { first, second } })
+          )
           // @ts-ignore
           ref.current?.close()
         })
@@ -68,7 +74,14 @@ const PairSettings = forwardRef(
         .finally(() => {
           setLoading(false)
         })
-    }
+    }, [first, second, pair])
+
+    const deleteHandler = useCallback(() => {
+      if (!pair) return
+      dispatch(removePair(pair))
+      // @ts-ignore
+      ref.current?.close()
+    }, [pair])
 
     return (
       <Portal>
@@ -81,10 +94,9 @@ const PairSettings = forwardRef(
           modalStyle={{ backgroundColor: colors.background }}
         >
           <View style={styles.container}>
-            <Title style={styles.title}>Удалить авто</Title>
-            <Subheading style={styles.description}>
-              Вы уверены, что хотите удалить информацию о своем авто?
-            </Subheading>
+            <Title style={styles.title}>
+              {pair ? 'Редактирование пары' : 'Добавление пары'}
+            </Title>
             <View style={styles.row}>
               <TextInput
                 value={first}
@@ -113,8 +125,18 @@ const PairSettings = forwardRef(
               disabled={!first || !second || loading}
               onPress={submitHandler}
             >
-              Добавить
+              {pair ? 'Обновить' : 'Добавить'}
             </Button>
+            {pair && (
+              <Button
+                mode="outlined"
+                style={styles.button}
+                disabled={loading}
+                onPress={deleteHandler}
+              >
+                Удалить
+              </Button>
+            )}
           </View>
         </Modalize>
       </Portal>
@@ -126,9 +148,8 @@ const useStyles = (insets: EdgeInsets) => {
   return StyleSheet.create({
     container: { padding: 20, paddingBottom: insets.bottom || 20 },
     title: { textAlign: 'center' },
-    description: { textAlign: 'center', marginTop: 10 },
     button: { marginTop: 10 },
-    row: { flexDirection: 'row', marginVertical: 20 },
+    row: { flexDirection: 'row', marginVertical: 10 },
     leftInput: { flex: 1, marginRight: 5 },
     rightInput: { flex: 1, marginLeft: 5 },
   })

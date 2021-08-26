@@ -37,6 +37,6 @@ export const pairSlice = createSlice({
   },
 })
 
-export const { addPair } = pairSlice.actions
+export const { addPair, removePair, changePair } = pairSlice.actions
 
 export default pairSlice.reducer
