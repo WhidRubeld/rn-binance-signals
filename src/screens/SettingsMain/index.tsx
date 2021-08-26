@@ -12,9 +12,11 @@ import { View, StyleSheet, ScrollView } from 'react-native'
 const ListIcon = ({
   color,
   badge,
+  icon = 'chevron-right',
 }: {
   color: string
   badge?: string | number
+  icon?: string
 }) => {
   React.useEffect(() => {
     ApiService.getPairKlines({ first: 'ETH', second: 'BTC' }, '4h')
@@ -41,7 +43,7 @@ const ListIcon = ({
           <Text style={styles.badgeText}>{badge}</Text>
         </View>
       )}
-      <List.Icon color={color} icon="chevron-right" />
+      <List.Icon color={color} icon={icon} />
     </View>
   )
 }
@@ -66,6 +68,11 @@ const ScreenComponent: FC<
   const renderCryptoOptionsCard = () => (
     <Card style={styles.card}>
       <List.Section>
+        <List.Item
+          title="Запустить остлеживание"
+          right={(props) => <ListIcon {...props} icon="play" />}
+          onPress={() => {}}
+        />
         <List.Item
           title="Валютные пары"
           description="Пары, по которым собираются и анализируются данные"
