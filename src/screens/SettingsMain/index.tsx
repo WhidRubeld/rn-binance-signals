@@ -9,7 +9,13 @@ import { RootState } from '@store'
 import React, { FC } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
 
-const ListIcon = ({ color, badge }: { color: string; badge?: string }) => {
+const ListIcon = ({
+  color,
+  badge,
+}: {
+  color: string
+  badge?: string | number
+}) => {
   React.useEffect(() => {
     ApiService.getPairKlines({ first: 'ETH', second: 'BTC' }, '4h')
       .then((res) => {
@@ -53,13 +59,17 @@ const ScreenComponent: FC<
     }, 0)
   })
 
+  const numberOfPairs = useSelector(
+    (state: RootState) => state.pairs.data.length
+  )
+
   const renderCryptoOptionsCard = () => (
     <Card style={styles.card}>
       <List.Section>
         <List.Item
           title="Валютные пары"
           description="Пары, по которым собираются и анализируются данные"
-          right={(props) => <ListIcon {...props} />}
+          right={(props) => <ListIcon {...props} badge={numberOfPairs} />}
           onPress={() => navigation.navigate('Pairs')}
         />
       </List.Section>
@@ -73,14 +83,7 @@ const ScreenComponent: FC<
           title="Права доступа"
           description="Настройка прав доступа для корректной работы приложения"
           right={(props) => (
-            <ListIcon
-              {...props}
-              badge={
-                availablePermissions > 0
-                  ? availablePermissions.toString()
-                  : undefined
-              }
-            />
+            <ListIcon {...props} badge={availablePermissions || undefined} />
           )}
           onPress={() => navigation.navigate('Permissions')}
         />
