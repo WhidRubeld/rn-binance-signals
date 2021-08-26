@@ -2,7 +2,7 @@ import { useSnackbar, useTheme } from '@hooks'
 import { SnackbarTypes } from '@providers/Snackbar'
 import * as Haptics from 'expo-haptics'
 import React, { useEffect } from 'react'
-import { Colors, Snackbar as DefaultSnackbar } from 'react-native-paper'
+import { Colors, Snackbar as DefaultSnackbar, Text } from 'react-native-paper'
 
 type SnakbarHapticsProps = {
   event: any
@@ -64,9 +64,10 @@ function QueueSnackbar() {
           label: message.buttonText || 'Закрыть',
           onPress: message.buttonAction,
           color: colors.surface,
+          labelStyle: { color: '#ffffff' },
         }}
       >
-        {message.text}
+        <Text style={{ color: '#ffffff' }}>{message.text}</Text>
       </DefaultSnackbar>
     )
   }
