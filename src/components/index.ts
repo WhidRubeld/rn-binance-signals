@@ -1,6 +1,9 @@
 export { default as Snackbar } from './Snackbar'
 export { default as SplashScreen } from './SplashScreen'
 export { default as KeyboardAvoidingView } from './KeyboardAvoidingView'
+export { Modalize } from 'react-native-modalize'
+export { Portal } from 'react-native-portalize'
+export { default as StatusBarIOS } from './StatusBarIOS'
 
 export {
   Colors,
@@ -24,4 +27,5 @@ export {
   Paragraph,
   Headline,
   List,
+  DataTable,
 } from 'react-native-paper'
