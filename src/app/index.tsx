@@ -10,18 +10,19 @@ import {
 } from '@providers'
 import { SnackbarRef } from '@refs'
 import Store from '@store'
+import { setPairs } from '@store/pairs'
 import React, { ReactElement, useLayoutEffect, useMemo } from 'react'
 
 import TaskManager, { ResultType } from './extra/TaskManager'
 import { defaultConfig, loadingTasks } from './tasks'
 
 function App({ args, theme }: { args: ResultType; theme: any }) {
-  const {} = args
+  const { pairs } = args
 
   const dispatch = useDispatch()
 
   useLayoutEffect(() => {
-    // set store data
+    dispatch(setPairs(pairs))
   }, [])
 
   return <Navigator theme={theme} />

@@ -14,6 +14,10 @@ export const pairSlice = createSlice({
   name: 'pairs',
   initialState,
   reducers: {
+    setPairs(state, { payload }: { payload: IPair[] }) {
+      state.data = payload
+      StorageService.setPairs(state.data)
+    },
     addPair(state, { payload }: { payload: IPair }) {
       state.data.push(payload)
       StorageService.setPairs(state.data)
@@ -37,6 +41,6 @@ export const pairSlice = createSlice({
   },
 })
 
-export const { addPair, removePair, changePair } = pairSlice.actions
+export const { setPairs, addPair, removePair, changePair } = pairSlice.actions
 
 export default pairSlice.reducer
