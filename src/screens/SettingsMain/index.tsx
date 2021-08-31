@@ -1,7 +1,7 @@
 import { SettingStackParamList } from '@app/navigation/stack/SettingStack'
 import { Card, List, Text } from '@components'
 import { appVersion } from '@constants'
-import { useSelector } from '@hooks'
+import { useBackgroundTask, useSelector } from '@hooks'
 import { StackScreenProps } from '@interfaces'
 import { useTheme } from '@react-navigation/native'
 import { RootState } from '@store'
@@ -42,6 +42,8 @@ const ListIcon = ({
 const ScreenComponent: FC<
   StackScreenProps<SettingStackParamList, 'SettingsMain'>
 > = ({ navigation }) => {
+  const { isRegistered, toggle } = useBackgroundTask()
+
   const availablePermissions = useSelector((state: RootState) => {
     return Object.keys(state.permissions.data).reduce((acc, curr) => {
       // @ts-ignore
@@ -59,9 +61,13 @@ const ScreenComponent: FC<
     <Card style={styles.card}>
       <List.Section>
         <List.Item
-          title="Запустить остлеживание"
-          right={(props) => <ListIcon {...props} icon="play" />}
-          onPress={() => {}}
+          title={
+            isRegistered ? 'Остановить отслеживание' : 'Запустить остлеживание'
+          }
+          right={(props) => (
+            <ListIcon {...props} icon={isRegistered ? 'pause' : 'play'} />
+          )}
+          onPress={() => (toggle ? toggle() : null)}
         />
         <List.Item
           title="Валютные пары"

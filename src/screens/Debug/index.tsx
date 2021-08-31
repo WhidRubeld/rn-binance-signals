@@ -1,6 +1,12 @@
 import { SettingStackParamList } from '@app/navigation/stack/SettingStack'
 import { Subheading, Surface, Button } from '@components'
-import { useSnackbar, useSelector, SnackbarTypes, useAppState } from '@hooks'
+import {
+  useSnackbar,
+  useSelector,
+  SnackbarTypes,
+  useAppState,
+  useBackgroundTask,
+} from '@hooks'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootState } from '@store'
 import React, { FC } from 'react'
@@ -15,6 +21,7 @@ const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Debug'>> = ({
 }) => {
   const appState = useAppState()
   const { add } = useSnackbar()
+  const { isRegistered, status } = useBackgroundTask()
 
   const reduxState = useSelector((state: RootState) => state)
 
@@ -52,6 +59,10 @@ const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Debug'>> = ({
       <Subheading>Redux state</Subheading>
       <Surface style={styles.blockButton}>
         <JSONTree data={reduxState as any} />
+      </Surface>
+      <Subheading>Background task state</Subheading>
+      <Surface style={styles.blockButton}>
+        <JSONTree data={{ isRegistered, status }} />
       </Surface>
     </ScrollView>
   )
