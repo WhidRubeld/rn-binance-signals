@@ -1,4 +1,5 @@
 export interface IResult {
-  value: number
+  sma7: number
+  sma25: number
   timestamp: number
 }
