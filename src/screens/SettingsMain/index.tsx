@@ -4,7 +4,6 @@ import { appVersion } from '@constants'
 import { useSelector } from '@hooks'
 import { StackScreenProps } from '@interfaces'
 import { useTheme } from '@react-navigation/native'
-import { ApiService } from '@services'
 import { RootState } from '@store'
 import React, { FC } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
@@ -15,20 +14,11 @@ const ListIcon = ({
   icon = 'chevron-right',
 }: {
   color: string
-  badge?: string | number
+  badge?: string | number | null
   icon?: string
 }) => {
-  React.useEffect(() => {
-    ApiService.getPairKlines({ first: 'ETH', second: 'BTC' }, '4h')
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err.response)
-      })
-  }, [])
-
   const { colors } = useTheme()
+
   return (
     <View style={styles.rightIcons}>
       {badge && (
@@ -76,7 +66,9 @@ const ScreenComponent: FC<
         <List.Item
           title="Валютные пары"
           description="Пары, по которым собираются и анализируются данные"
-          right={(props) => <ListIcon {...props} badge={numberOfPairs} />}
+          right={(props) => (
+            <ListIcon {...props} badge={numberOfPairs || null} />
+          )}
           onPress={() => navigation.navigate('Pairs')}
         />
       </List.Section>
