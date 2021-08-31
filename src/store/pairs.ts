@@ -1,6 +1,6 @@
 import { IPair } from '@interfaces'
-import { createSlice } from '@reduxjs/toolkit'
-import { StorageService } from '@services'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { ApiService, StorageService } from '@services'
 
 export interface PairState {
   data: IPair[]
@@ -10,6 +10,34 @@ const initialState: PairState = {
   data: [],
 }
 
+export const addPair = createAsyncThunk(
+  'pairs/add',
+  async (pair: IPair, { rejectWithValue }) => {
+    try {
+      return await ApiService.getPairKlines(pair)
+    } catch (e) {
+      console.warn(e)
+      return rejectWithValue('Error')
+    }
+  }
+)
+
+export const changePair = createAsyncThunk(
+  'pairs/change',
+  async (payload: { old: IPair; new: IPair }, { rejectWithValue }) => {
+    try {
+      return await ApiService.getPairKlines(payload.new)
+    } catch (e) {
+      console.warn(e)
+      return rejectWithValue('Error')
+    }
+  }
+)
+
+export const removePair = createAsyncThunk('pairs/remove', (payload: IPair) => {
+  return true
+})
+
 export const pairSlice = createSlice({
   name: 'pairs',
   initialState,
@@ -18,29 +46,31 @@ export const pairSlice = createSlice({
       state.data = payload
       StorageService.setPairs(state.data)
     },
-    addPair(state, { payload }: { payload: IPair }) {
-      state.data.push(payload)
+  },
+  extraReducers: (builder) => {
+    builder.addCase(addPair.fulfilled, (state, { meta }) => {
+      state.data.push(meta.arg)
       StorageService.setPairs(state.data)
-    },
-    removePair(state, { payload }: { payload: IPair }) {
+    })
+    builder.addCase(changePair.fulfilled, (state, { meta }) => {
       const index = state.data.findIndex(
-        (v) => v.first === payload.first && v.second === payload.second
+        (v) =>
+          v.first === meta.arg.old.first && v.second === meta.arg.old.second
+      )
+      if (index !== -1) state.data.splice(index, 1, meta.arg.new)
+      StorageService.setPairs(state.data)
+    })
+    builder.addCase(removePair.fulfilled, (state, { meta }) => {
+      const index = state.data.findIndex(
+        (v) => v.first === meta.arg.first && v.second === meta.arg.second
       )
 
       if (index !== -1) state.data.splice(index, 1)
       StorageService.setPairs(state.data)
-    },
-    changePair(state, { payload }: { payload: { old: IPair; new: IPair } }) {
-      const index = state.data.findIndex(
-        (v) => v.first === payload.old.first && v.second === payload.old.second
-      )
-
-      if (index !== -1) state.data.splice(index, 1, payload.new)
-      StorageService.setPairs(state.data)
-    },
+    })
   },
 })
 
-export const { setPairs, addPair, removePair, changePair } = pairSlice.actions
+export const { setPairs } = pairSlice.actions
 
 export default pairSlice.reducer

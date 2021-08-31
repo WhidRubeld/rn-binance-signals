@@ -14,14 +14,17 @@ import {
   useDispatch,
 } from '@hooks'
 import { IPair } from '@interfaces'
-import { ApiService } from '@services'
 import { addPair, changePair, removePair } from '@store/pairs'
 import React, { forwardRef, Ref, useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 const PairSettings = forwardRef(
   (
-    { onClose, pair }: { onClose: () => void; pair: IPair | null },
+    {
+      onClose,
+      pair,
+      onChange,
+    }: { onClose: () => void; pair: IPair | null; onChange: () => void },
     ref: Ref<Modalize>
   ) => {
     const dispatch = useDispatch()
@@ -55,15 +58,16 @@ const PairSettings = forwardRef(
 
     const submitHandler = useCallback(() => {
       setLoading(true)
-      ApiService.getPairKlines({ first, second })
+
+      const promise = !pair
+        ? dispatch(addPair({ first, second }))
+        : dispatch(changePair({ old: pair, new: { first, second } }))
+
+      promise
         .then(() => {
-          dispatch(
-            !pair
-              ? addPair({ first, second })
-              : changePair({ old: pair, new: { first, second } })
-          )
           // @ts-ignore
           ref.current?.close()
+          onChange()
         })
         .catch(() => {
           add({
@@ -74,14 +78,16 @@ const PairSettings = forwardRef(
         .finally(() => {
           setLoading(false)
         })
-    }, [first, second, pair])
+    }, [first, second, pair, onChange])
 
     const deleteHandler = useCallback(() => {
       if (!pair) return
-      dispatch(removePair(pair))
-      // @ts-ignore
-      ref.current?.close()
-    }, [pair])
+      dispatch(removePair(pair)).then(() => {
+        // @ts-ignore
+        ref.current?.close()
+        onChange()
+      })
+    }, [pair, onChange])
 
     return (
       <Portal>

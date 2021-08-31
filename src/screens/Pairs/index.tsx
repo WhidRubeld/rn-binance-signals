@@ -1,10 +1,11 @@
 // @ts-ignore
 import { ExampleStackParamList } from '@app/navigation/stack/ExampleStack'
 import { Card, DataTable, Button, Modalize } from '@components'
-import { useSelector } from '@hooks'
+import { useDispatch, useSelector } from '@hooks'
 import { IPair, StackScreenProps } from '@interfaces'
 import { RootState } from '@store'
-import React, { FC, useRef, useState } from 'react'
+import { setResultPairs } from '@store/results'
+import React, { FC, useRef, useState, useCallback } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 
 import PairSettings from './extra/PairSettings'
@@ -12,6 +13,7 @@ import PairSettings from './extra/PairSettings'
 // TODO
 const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
   ({ navigation }) => {
+    const dispatch = useDispatch()
     const { data } = useSelector((state: RootState) => state.pairs)
     const modalRef = useRef<Modalize>(null)
 
@@ -46,6 +48,10 @@ const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
       )
     }
 
+    const onChange = useCallback(() => {
+      dispatch(setResultPairs(data))
+    }, [data, dispatch])
+
     return (
       <ScrollView
         style={styles.container}
@@ -59,6 +65,7 @@ const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
           ref={modalRef}
           onClose={() => setSelectedPair(null)}
           pair={selectedPair}
+          onChange={onChange}
         />
       </ScrollView>
     )

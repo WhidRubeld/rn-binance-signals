@@ -1,6 +1,7 @@
 export { StackScreenProps } from '@react-navigation/stack'
 export { IPermissions } from './IPermissions'
 export { IPair } from './IPair'
+export { IResult } from './IResult'
 
 export type _interval = keyof {
   '1m': never
