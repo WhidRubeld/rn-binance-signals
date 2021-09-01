@@ -17,9 +17,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "dev.whidrubeld.signals",
+      "buildNumber": "1",
       "supportsTablet": true
     },
     "android": {
+      "package": "dev.whidrubeld.signals",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
