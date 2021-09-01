@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "test",
-    "slug": "test",
+    "name": "Binance SMA Tracker",
+    "slug": "binance-sma-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
