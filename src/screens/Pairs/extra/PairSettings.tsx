@@ -37,11 +37,15 @@ const PairSettings = forwardRef(
     const [loading, setLoading] = useState(false)
     const [first, setFirst] = useState('')
     const [second, setSecond] = useState('')
+    const [up, setUp] = useState('')
+    const [down, setDown] = useState('')
 
     useEffect(() => {
       if (pair) {
         setFirst(pair.first)
         setSecond(pair.second)
+        setUp(`${pair.percent.up}`)
+        setDown(`${pair.percent.down}`)
       }
     }, [pair])
 
@@ -53,21 +57,29 @@ const PairSettings = forwardRef(
       setStatus(false)
       setFirst('')
       setSecond('')
+      setUp('')
+      setDown('')
       onClose()
     }, [onClose])
 
     const submitHandler = useCallback(() => {
       setLoading(true)
 
+      const data = {
+        first,
+        second,
+        percent: { up: parseFloat(up), down: parseFloat(down) },
+      }
+
       const promise = !pair
-        ? dispatch(addPair({ first, second }))
-        : dispatch(changePair({ old: pair, new: { first, second } }))
+        ? dispatch(addPair(data))
+        : dispatch(changePair({ old: pair, new: data }))
 
       promise
         .then(() => {
+          onChange()
           // @ts-ignore
           ref.current?.close()
-          onChange()
         })
         .catch(() => {
           add({
@@ -78,15 +90,14 @@ const PairSettings = forwardRef(
         .finally(() => {
           setLoading(false)
         })
-    }, [first, second, pair, onChange])
+    }, [first, second, up, down, pair, onChange])
 
     const deleteHandler = useCallback(() => {
       if (!pair) return
-      dispatch(removePair(pair)).then(() => {
-        // @ts-ignore
-        ref.current?.close()
-        onChange()
-      })
+      dispatch(removePair(pair))
+      // @ts-ignore
+      ref.current?.close()
+      onChange()
     }, [pair, onChange])
 
     return (
@@ -125,10 +136,32 @@ const PairSettings = forwardRef(
                 disabled={loading}
               />
             </View>
+            <View style={styles.row}>
+              <TextInput
+                value={down}
+                onChangeText={setDown}
+                mode="outlined"
+                onSubmitEditing={() => {}}
+                label="Нижний процент"
+                keyboardType="numeric"
+                style={styles.leftInput}
+                disabled={loading}
+              />
+              <TextInput
+                value={up}
+                onChangeText={setUp}
+                mode="outlined"
+                onSubmitEditing={() => {}}
+                label="Верхний процент"
+                keyboardType="numeric"
+                style={styles.rightInput}
+                disabled={loading}
+              />
+            </View>
             <Button
               mode="contained"
               style={styles.button}
-              disabled={!first || !second || loading}
+              disabled={!first || !second || loading || !up || !down}
               onPress={submitHandler}
             >
               {pair ? 'Обновить' : 'Добавить'}

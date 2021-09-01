@@ -4,8 +4,8 @@ import { Card, DataTable, Button, Modalize } from '@components'
 import { useDispatch, useSelector } from '@hooks'
 import { IPair, StackScreenProps } from '@interfaces'
 import { RootState } from '@store'
-import { setResultPairs } from '@store/results'
-import React, { FC, useRef, useState, useCallback } from 'react'
+import { resetResults } from '@store/results'
+import React, { FC, useRef, useState } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 
 import PairSettings from './extra/PairSettings'
@@ -25,8 +25,9 @@ const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
         <Card style={styles.table}>
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title>Базовая валюта</DataTable.Title>
-              <DataTable.Title>Дочерняя валюта</DataTable.Title>
+              <DataTable.Title>Валютная пара</DataTable.Title>
+              <DataTable.Title numeric>Нижний %</DataTable.Title>
+              <DataTable.Title numeric>Верхний %</DataTable.Title>
             </DataTable.Header>
 
             {data.map((v) => {
@@ -38,8 +39,9 @@ const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
                   }}
                   key={`${v.first}-${v.second}`}
                 >
-                  <DataTable.Cell>{v.first}</DataTable.Cell>
-                  <DataTable.Cell>{v.second}</DataTable.Cell>
+                  <DataTable.Cell>{`${v.first} / ${v.second}`}</DataTable.Cell>
+                  <DataTable.Cell numeric>{v.percent.down}%</DataTable.Cell>
+                  <DataTable.Cell numeric>{v.percent.up}%</DataTable.Cell>
                 </DataTable.Row>
               )
             })}
@@ -47,10 +49,6 @@ const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
         </Card>
       )
     }
-
-    const onChange = useCallback(() => {
-      dispatch(setResultPairs(data))
-    }, [data, dispatch])
 
     return (
       <ScrollView
@@ -65,7 +63,9 @@ const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
           ref={modalRef}
           onClose={() => setSelectedPair(null)}
           pair={selectedPair}
-          onChange={onChange}
+          onChange={() => {
+            dispatch(resetResults())
+          }}
         />
       </ScrollView>
     )

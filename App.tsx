@@ -1,9 +1,7 @@
 import App from '@app'
-import { BACKGROUND_FETCH_TASK } from '@env'
-import { lauchHttpInterceptor } from '@services'
-import * as BackgroundFetch from 'expo-background-fetch'
+import { lauchHttpInterceptor, StorageService } from '@services'
+import * as Notifications from 'expo-notifications'
 import { StatusBar } from 'expo-status-bar'
-import * as TaskManager from 'expo-task-manager'
 import moment from 'moment'
 import React from 'react'
 import { Platform, UIManager } from 'react-native'
@@ -11,8 +9,21 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import 'moment/locale/ru'
 
+import './BackgroundTask'
+
 moment.locale('ru')
 lauchHttpInterceptor()
+
+// StorageService.removePairs()
+// StorageService.removeResults()
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+})
 
 if (
   Platform.OS === 'android' &&
@@ -20,16 +31,6 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
-
-TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  const now = Date.now()
-
-  console.log(
-    `Got background fetch call at date: ${new Date(now).toISOString()}`
-  )
-
-  return BackgroundFetch.Result.NewData
-})
 
 export default function Boot() {
   return (

@@ -34,9 +34,12 @@ export const changePair = createAsyncThunk(
   }
 )
 
-export const removePair = createAsyncThunk('pairs/remove', (payload: IPair) => {
-  return true
-})
+export const removePair = createAsyncThunk(
+  'pairs/remove',
+  async (payload: IPair) => {
+    return await ApiService.getPairKlines(payload)
+  }
+)
 
 export const pairSlice = createSlice({
   name: 'pairs',
