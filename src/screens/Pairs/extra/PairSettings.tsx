@@ -44,8 +44,8 @@ const PairSettings = forwardRef(
       if (pair) {
         setFirst(pair.first)
         setSecond(pair.second)
-        setUp(`${pair.percent.up}`)
-        setDown(`${pair.percent.down}`)
+        setUp(`${pair.percent.up}`.replace(/\./g, ','))
+        setDown(`${pair.percent.down}`.replace(/\./g, ','))
       }
     }, [pair])
 
@@ -68,7 +68,10 @@ const PairSettings = forwardRef(
       const data = {
         first,
         second,
-        percent: { up: parseFloat(up), down: parseFloat(down) },
+        percent: {
+          up: parseFloat(up.replace(/,/g, '.')),
+          down: parseFloat(up.replace(/,/g, '.')),
+        },
       }
 
       const promise = !pair
