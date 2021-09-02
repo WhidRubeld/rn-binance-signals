@@ -7,12 +7,14 @@ export type BackgroundTaskContextValue = {
   isRegistered: boolean
   status: BackgroundFetch.Status | null
   toggle: (() => void) | null
+  checkStatusAsync: (() => void) | null
 }
 
 export const BackgroundTaskContext = createContext<BackgroundTaskContextValue>({
   isRegistered: false,
   status: null,
   toggle: null,
+  checkStatusAsync: null,
 })
 
 async function registerBackgroundFetchAsync() {
@@ -60,7 +62,12 @@ export default function BackgroundTaskProvider({
 
   return (
     <BackgroundTaskContext.Provider
-      value={{ isRegistered, status, toggle: toggleFetchTask }}
+      value={{
+        isRegistered,
+        status,
+        toggle: toggleFetchTask,
+        checkStatusAsync,
+      }}
     >
       {children}
     </BackgroundTaskContext.Provider>

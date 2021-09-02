@@ -21,7 +21,7 @@ export default class AppStorage {
     return AsyncStorage.removeItem(Keys.PAIRS)
   }
   /* PAIRS */
-  static async gerResults(): Promise<ResultState['data']> {
+  static async getResults(): Promise<ResultState['data']> {
     return AsyncStorage.getItem(Keys.RESULTS).then((results) => {
       return results ? (JSON.parse(results) as ResultState['data']) : []
     })

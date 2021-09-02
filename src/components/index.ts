@@ -4,6 +4,7 @@ export { default as KeyboardAvoidingView } from './KeyboardAvoidingView'
 export { Modalize } from 'react-native-modalize'
 export { Portal } from 'react-native-portalize'
 export { default as StatusBarIOS } from './StatusBarIOS'
+export { default as RefreshControl } from './RefreshControl'
 
 export {
   Colors,

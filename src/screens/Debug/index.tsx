@@ -1,57 +1,40 @@
 import { SettingStackParamList } from '@app/navigation/stack/SettingStack'
 import { Subheading, Surface, Button } from '@components'
 import {
-  useSnackbar,
   useSelector,
-  SnackbarTypes,
   useAppState,
   useBackgroundTask,
+  useDispatch,
 } from '@hooks'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootState } from '@store'
+import { resetPairState } from '@store/pairs'
+import { resetResultState } from '@store/results'
 import React, { FC } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import JSONTree from 'react-native-json-tree'
 
-const text =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 🏄🏻‍♀️ 💆🏻 🧑🏼‍🦲'
-
 const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Debug'>> = ({
   navigation,
 }) => {
+  const dispatch = useDispatch()
   const appState = useAppState()
-  const { add } = useSnackbar()
   const { isRegistered, status } = useBackgroundTask()
 
   const reduxState = useSelector((state: RootState) => state)
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Subheading>Локальные оповещения</Subheading>
-      <Surface style={styles.block}>
-        <Button
-          mode="outlined"
-          style={styles.blockButton}
-          onPress={() => add({ id: 'default', text })}
-        >
-          Обычное
-        </Button>
-        <Button
-          mode="outlined"
-          style={styles.blockButton}
-          onPress={() =>
-            add({ id: 'success', text, type: SnackbarTypes.Success })
-          }
-        >
-          Успешное
-        </Button>
-        <Button
-          mode="outlined"
-          onPress={() => add({ id: 'error', text, type: SnackbarTypes.Error })}
-        >
-          Ошибка
-        </Button>
-      </Surface>
+      <Button
+        mode="contained"
+        style={styles.blockButton}
+        onPress={() => {
+          dispatch(resetResultState())
+          dispatch(resetPairState())
+        }}
+      >
+        Сбросить состояние
+      </Button>
       <Subheading>App state</Subheading>
       <Surface style={styles.blockButton}>
         <JSONTree data={appState} />

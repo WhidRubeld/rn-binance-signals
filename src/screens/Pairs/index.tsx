@@ -1,18 +1,17 @@
 // @ts-ignore
-import { ExampleStackParamList } from '@app/navigation/stack/ExampleStack'
+import { SettingStackParamList } from '@app/navigation/stack/SettingStack'
 import { Card, DataTable, Button, Modalize } from '@components'
 import { useDispatch, useSelector } from '@hooks'
 import { IPair, StackScreenProps } from '@interfaces'
 import { RootState } from '@store'
-import { resetResults } from '@store/results'
+import { resetResultState } from '@store/results'
 import React, { FC, useRef, useState } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 
 import PairSettings from './extra/PairSettings'
 
-// TODO
-const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
-  ({ navigation }) => {
+const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Pairs'>> =
+  () => {
     const dispatch = useDispatch()
     const { data } = useSelector((state: RootState) => state.pairs)
     const modalRef = useRef<Modalize>(null)
@@ -37,7 +36,7 @@ const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
                     setSelectedPair(v)
                     modalRef.current?.open()
                   }}
-                  key={`${v.first}-${v.second}`}
+                  key={v.uuid}
                 >
                   <DataTable.Cell>{`${v.first} / ${v.second}`}</DataTable.Cell>
                   <DataTable.Cell numeric>{v.percent.down}%</DataTable.Cell>
@@ -64,7 +63,7 @@ const ScreenComponent: FC<StackScreenProps<ExampleStackParamList, 'Example'>> =
           onClose={() => setSelectedPair(null)}
           pair={selectedPair}
           onChange={() => {
-            dispatch(resetResults())
+            dispatch(resetResultState())
           }}
         />
       </ScrollView>

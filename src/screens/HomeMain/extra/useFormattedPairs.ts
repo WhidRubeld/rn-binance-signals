@@ -5,10 +5,20 @@ import { useMemo } from 'react'
 
 export default function useFormattedPairs() {
   const { data: pairs } = useSelector((state: RootState) => state.pairs)
-  const { data: results } = useSelector((state: RootState) => state.results)
+  const { data: results, timestamp: lastResultsCheck } = useSelector(
+    (state: RootState) => state.results
+  )
 
   const output = useMemo(() => {
-    let datetime = null
+    let lastLaunch = null
+    const lastCheck = lastResultsCheck
+      ? moment
+          .unix(lastResultsCheck)
+          .tz('Etc/GMT')
+          .local()
+          .format('DD/MM/YYYY HH:mm:ss')
+      : null
+
     const res = pairs
       .map((pair) => {
         let value = 0
@@ -20,7 +30,7 @@ export default function useFormattedPairs() {
           const { sma7, sma25, timestamp } =
             data.results[data.results.length - 1]
 
-          datetime = moment
+          lastLaunch = moment
             .unix(timestamp)
             .tz('Etc/GMT')
             .local()
@@ -34,15 +44,15 @@ export default function useFormattedPairs() {
         }
 
         return {
+          data: pair,
           text: `${pair.first} / ${pair.second}`,
           value,
-          percent: pair.percent,
         }
       })
       .sort((a, b) => a.value - b.value)
 
-    return { datetime, pairs: res }
-  }, [pairs, results])
+    return { lastLaunch, pairs: res, lastCheck }
+  }, [pairs, results, lastResultsCheck])
 
   return output
 }

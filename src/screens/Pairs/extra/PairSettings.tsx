@@ -73,7 +73,7 @@ const PairSettings = forwardRef(
 
       const promise = !pair
         ? dispatch(addPair(data))
-        : dispatch(changePair({ old: pair, new: data }))
+        : dispatch(changePair({ ...pair, ...data }))
 
       promise
         .then(() => {
