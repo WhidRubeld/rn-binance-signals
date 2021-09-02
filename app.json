@@ -19,7 +19,10 @@
     "ios": {
       "bundleIdentifier": "dev.whidrubeld.signals",
       "buildNumber": "1",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": ["fetch"]
+      }
     },
     "android": {
       "package": "dev.whidrubeld.signals",
