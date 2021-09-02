@@ -21,7 +21,7 @@ export default function useFormattedPairs() {
 
     const res = pairs
       .map((pair) => {
-        let value = 0
+        let value = null
         const data = results.find((v) => {
           return v.pair.first === pair.first && v.pair.second === pair.second
         })
@@ -49,7 +49,7 @@ export default function useFormattedPairs() {
           value,
         }
       })
-      .sort((a, b) => a.value - b.value)
+      .sort((a, b) => (a.value || 0) - (b.value || 0))
 
     return { lastLaunch, pairs: res, lastCheck }
   }, [pairs, results, lastResultsCheck])

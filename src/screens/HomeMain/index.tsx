@@ -1,6 +1,7 @@
 import { HomeStackParamList } from '@app/navigation/stack/HomeStack'
 import { Card, DataTable, Text } from '@components'
 import { StackScreenProps } from '@interfaces'
+import { useTheme } from '@react-navigation/native'
 import React, { FC } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 
@@ -10,6 +11,7 @@ import useRefresh from './extra/useRefresh'
 // TODO
 const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
   () => {
+    const { colors } = useTheme()
     useRefresh()
     const { pairs, lastCheck, lastLaunch } = useFormattedPairs()
 
@@ -26,13 +28,14 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
 
               {pairs.map((v) => {
                 const color = () => {
+                  if (v.value === null) return colors.text
                   if (v.value < v.data.percent.down) return 'red'
                   if (
                     v.value >= v.data.percent.down &&
                     v.value <= v.data.percent.up
                   )
                     return 'orange'
-                  return 'black'
+                  return 'green'
                 }
                 return (
                   <DataTable.Row key={v.data.uuid}>
@@ -40,11 +43,11 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
                     <DataTable.Cell numeric>
                       <Text
                         style={{
-                          color: v.value ? color() : 'black',
+                          color: color(),
                           fontWeight: 'bold',
                         }}
                       >
-                        {v.value ? `${v.value}%` : 'NaN'}
+                        {v.value !== null ? `${v.value}%` : 'NaN'}
                       </Text>
                     </DataTable.Cell>
                   </DataTable.Row>
