@@ -32,21 +32,6 @@ const informationProcessingHandler = async (
       const sma25 = sma(closeValues, 25).pop()
 
       const index = info.findIndex((v) => v.pair.uuid === pair.uuid)
-      Notifications.scheduleNotificationAsync({
-        content: {
-          title: `${pair.first} / ${pair.second}`,
-          body: `Смена тренда для пары ${pair.first} / ${
-            pair.second
-          }. Нижний предел - ${pair.percent.down}%, верхний предел - ${
-            pair.percent.up
-          }%. Время - ${moment
-            .unix(timestamp)
-            .tz('Etc/GMT')
-            .local()
-            .format('DD/MM/YYYY HH:mm:ss')}`,
-        },
-        trigger: null,
-      })
 
       if (sma7 && sma25) {
         if (index !== -1) {
@@ -60,7 +45,15 @@ const informationProcessingHandler = async (
               Notifications.scheduleNotificationAsync({
                 content: {
                   title: `${pair.first} / ${pair.second}`,
-                  body: `Смена тренда для пары ${pair.first} / ${pair.second}.`,
+                  body: `Смена тренда для пары ${pair.first} / ${
+                    pair.second
+                  }. Нижний предел - ${pair.percent.down}%, верхний предел - ${
+                    pair.percent.up
+                  }%. Время - ${moment
+                    .unix(timestamp)
+                    .tz('Etc/GMT')
+                    .local()
+                    .format('DD/MM/YYYY HH:mm:ss')}`,
                 },
                 trigger: null,
               })
