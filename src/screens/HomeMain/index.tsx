@@ -23,7 +23,9 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
             <DataTable>
               <DataTable.Header>
                 <DataTable.Title>Валютная пара</DataTable.Title>
-                <DataTable.Title numeric>Сила</DataTable.Title>
+                <DataTable.Title numeric>Нижний</DataTable.Title>
+                <DataTable.Title numeric>Верхний</DataTable.Title>
+                <DataTable.Title numeric>Текущий</DataTable.Title>
               </DataTable.Header>
 
               {pairs.map((v) => {
@@ -36,6 +38,10 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
                 return (
                   <DataTable.Row key={v.data.uuid}>
                     <DataTable.Cell>{v.text}</DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      {v.data.percent.down}
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>{v.data.percent.up}</DataTable.Cell>
                     <DataTable.Cell numeric>
                       <Text
                         style={{
