@@ -1,11 +1,13 @@
+import launchBackgroundTask from '@app/BackgroundFetchTask'
 import { SettingStackParamList } from '@app/navigation/stack/SettingStack'
 import { Card, List, Text } from '@components'
 import { appVersion } from '@constants'
-import { useBackgroundTask, useSelector } from '@hooks'
+import { useBackgroundTask, useDispatch, useSelector } from '@hooks'
 import { StackScreenProps } from '@interfaces'
 import { useTheme } from '@react-navigation/native'
 import { RootState } from '@store'
-import React, { FC } from 'react'
+import { resetResultState } from '@store/results'
+import React, { FC, useCallback } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
 
 const ListIcon = ({
@@ -42,6 +44,7 @@ const ListIcon = ({
 const ScreenComponent: FC<
   StackScreenProps<SettingStackParamList, 'SettingsMain'>
 > = ({ navigation }) => {
+  const dispatch = useDispatch()
   const { isRegistered, toggle } = useBackgroundTask()
 
   const availablePermissions = useSelector((state: RootState) => {
@@ -57,6 +60,14 @@ const ScreenComponent: FC<
     (state: RootState) => state.pairs.data.length
   )
 
+  const toggleBackgroundTask = useCallback(() => {
+    if (!toggle) return
+    toggle()
+    dispatch(resetResultState())
+
+    if (!isRegistered) launchBackgroundTask()
+  }, [toggle, isRegistered, dispatch])
+
   const renderCryptoOptionsCard = () => (
     <Card style={styles.card}>
       <List.Section>
@@ -67,7 +78,7 @@ const ScreenComponent: FC<
           right={(props) => (
             <ListIcon {...props} icon={isRegistered ? 'pause' : 'play'} />
           )}
-          onPress={() => (toggle ? toggle() : null)}
+          onPress={toggleBackgroundTask}
         />
         <List.Item
           title="Валютные пары"

@@ -23,19 +23,15 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
             <DataTable>
               <DataTable.Header>
                 <DataTable.Title>Валютная пара</DataTable.Title>
-                <DataTable.Title numeric>Процент</DataTable.Title>
+                <DataTable.Title numeric>Сила</DataTable.Title>
               </DataTable.Header>
 
               {pairs.map((v) => {
                 const color = () => {
                   if (v.value === null) return colors.text
-                  if (v.value < v.data.percent.down) return 'red'
-                  if (
-                    v.value >= v.data.percent.down &&
-                    v.value <= v.data.percent.up
-                  )
-                    return 'orange'
-                  return 'green'
+                  if (v.value > 0) return 'green'
+                  if (v.value < 0) return 'red'
+                  return 'orange'
                 }
                 return (
                   <DataTable.Row key={v.data.uuid}>
@@ -47,7 +43,7 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
                           fontWeight: 'bold',
                         }}
                       >
-                        {v.value !== null ? `${v.value}%` : 'NaN'}
+                        {v.value !== null ? `${v.value}` : '-'}
                       </Text>
                     </DataTable.Cell>
                   </DataTable.Row>
@@ -57,14 +53,13 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
           </Card>
           {lastCheck && (
             <Text style={styles.datetime}>
-              Посл. обновление списка - {lastCheck}
+              Посл. обновление списка: {lastCheck}
             </Text>
           )}
-          {lastLaunch && (
-            <Text style={styles.datetime}>
-              Посл. выполнение таска - {lastLaunch}
-            </Text>
-          )}
+
+          <Text style={styles.datetime}>
+            Посл. выполнение таска: {lastLaunch || 'не запускался'}
+          </Text>
         </>
       )
     }

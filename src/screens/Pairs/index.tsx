@@ -25,8 +25,8 @@ const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Pairs'>> =
           <DataTable>
             <DataTable.Header>
               <DataTable.Title>Валютная пара</DataTable.Title>
-              <DataTable.Title numeric>Нижний %</DataTable.Title>
-              <DataTable.Title numeric>Верхний %</DataTable.Title>
+              <DataTable.Title numeric>Нижняя тяга</DataTable.Title>
+              <DataTable.Title numeric>Верхняя тяга</DataTable.Title>
             </DataTable.Header>
 
             {data.map((v) => {
@@ -39,8 +39,8 @@ const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Pairs'>> =
                   key={v.uuid}
                 >
                   <DataTable.Cell>{`${v.first} / ${v.second}`}</DataTable.Cell>
-                  <DataTable.Cell numeric>{v.percent.down}%</DataTable.Cell>
-                  <DataTable.Cell numeric>{v.percent.up}%</DataTable.Cell>
+                  <DataTable.Cell numeric>{v.percent.down}</DataTable.Cell>
+                  <DataTable.Cell numeric>{v.percent.up}</DataTable.Cell>
                 </DataTable.Row>
               )
             })}

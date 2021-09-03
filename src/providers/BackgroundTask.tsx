@@ -19,7 +19,7 @@ export const BackgroundTaskContext = createContext<BackgroundTaskContextValue>({
 
 async function registerBackgroundFetchAsync() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 60 * 30, // 30 minutes
+    minimumInterval: 60 * 20, // time intecal in minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
   })

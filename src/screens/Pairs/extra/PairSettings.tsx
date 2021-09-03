@@ -145,7 +145,7 @@ const PairSettings = forwardRef(
                 onChangeText={setDown}
                 mode="outlined"
                 onSubmitEditing={() => {}}
-                label="Нижний процент"
+                label="Нижняя тяга"
                 keyboardType="numeric"
                 style={styles.leftInput}
                 disabled={loading}
@@ -155,7 +155,7 @@ const PairSettings = forwardRef(
                 onChangeText={setUp}
                 mode="outlined"
                 onSubmitEditing={() => {}}
-                label="Верхний процент"
+                label="Верхняя тяга"
                 keyboardType="numeric"
                 style={styles.rightInput}
                 disabled={loading}
