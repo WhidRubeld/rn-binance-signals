@@ -5,6 +5,7 @@ import {
   Portal,
   StatusBarIOS,
   TextInput,
+  HelperText,
 } from '@components'
 import {
   useSafeAreaInsets,
@@ -15,7 +16,14 @@ import {
 } from '@hooks'
 import { IPair } from '@interfaces'
 import { addPair, changePair, removePair } from '@store/pairs'
-import React, { forwardRef, Ref, useCallback, useEffect, useState } from 'react'
+import React, {
+  forwardRef,
+  Ref,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react'
 import { StyleSheet, View } from 'react-native'
 
 const PairSettings = forwardRef(
@@ -40,12 +48,50 @@ const PairSettings = forwardRef(
     const [up, setUp] = useState('')
     const [down, setDown] = useState('')
 
+    const downErrors = useMemo(() => {
+      if (down) {
+        if (parseFloat(down) >= 0) {
+          return { status: true, text: 'Число должно быть < 0' }
+        }
+
+        if (parseFloat(down).toString() !== down) {
+          return { status: true, text: 'Некорректный формат' }
+        }
+      }
+      return { status: false, text: null }
+    }, [down])
+
+    const upErrors = useMemo(() => {
+      if (up) {
+        if (parseFloat(up) <= 0) {
+          return { status: true, text: 'Число должно быть > 0' }
+        }
+
+        if (parseFloat(up).toString() !== up) {
+          return { status: true, text: 'Некорректный формат' }
+        }
+      }
+      return { status: false, text: null }
+    }, [up])
+
+    const isSubmitDisabled = useMemo(() => {
+      return (
+        !first ||
+        !second ||
+        loading ||
+        !up ||
+        !down ||
+        upErrors.status ||
+        downErrors.status
+      )
+    }, [first, second, loading, up, down, upErrors, downErrors])
+
     useEffect(() => {
       if (pair) {
         setFirst(pair.first)
         setSecond(pair.second)
-        setUp(`${pair.percent.up}`.replace(/\./g, ','))
-        setDown(`${pair.percent.down}`.replace(/\./g, ','))
+        setUp(`${pair.percent.up}`)
+        setDown(`${pair.percent.down}`)
       }
     }, [pair])
 
@@ -69,8 +115,8 @@ const PairSettings = forwardRef(
         first,
         second,
         percent: {
-          up: parseFloat(up.replace(/,/g, '.')),
-          down: parseFloat(up.replace(/,/g, '.')),
+          up: parseFloat(up),
+          down: parseFloat(down),
         },
       }
 
@@ -140,31 +186,37 @@ const PairSettings = forwardRef(
               />
             </View>
             <View style={styles.row}>
-              <TextInput
-                value={down}
-                onChangeText={setDown}
-                mode="outlined"
-                onSubmitEditing={() => {}}
-                label="Нижняя тяга"
-                keyboardType="numeric"
-                style={styles.leftInput}
-                disabled={loading}
-              />
-              <TextInput
-                value={up}
-                onChangeText={setUp}
-                mode="outlined"
-                onSubmitEditing={() => {}}
-                label="Верхняя тяга"
-                keyboardType="numeric"
-                style={styles.rightInput}
-                disabled={loading}
-              />
+              <View style={styles.leftInput}>
+                <TextInput
+                  value={down}
+                  onChangeText={setDown}
+                  mode="outlined"
+                  onSubmitEditing={() => {}}
+                  label="Нижняя тяга"
+                  disabled={loading}
+                />
+                <HelperText type="error" visible={downErrors.status}>
+                  {downErrors.text}
+                </HelperText>
+              </View>
+              <View style={styles.rightInput}>
+                <TextInput
+                  value={up}
+                  onChangeText={setUp}
+                  mode="outlined"
+                  onSubmitEditing={() => {}}
+                  label="Верхняя тяга"
+                  disabled={loading}
+                />
+                <HelperText type="error" visible={upErrors.status}>
+                  {upErrors.text}
+                </HelperText>
+              </View>
             </View>
             <Button
               mode="contained"
               style={styles.button}
-              disabled={!first || !second || loading || !up || !down}
+              disabled={isSubmitDisabled}
               onPress={submitHandler}
             >
               {pair ? 'Обновить' : 'Добавить'}

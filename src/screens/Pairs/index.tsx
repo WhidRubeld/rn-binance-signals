@@ -1,7 +1,12 @@
 // @ts-ignore
 import { SettingStackParamList } from '@app/navigation/stack/SettingStack'
 import { Card, DataTable, Button, Modalize } from '@components'
-import { useDispatch, useSelector } from '@hooks'
+import {
+  useBackgroundTask,
+  useDispatch,
+  useSelector,
+  useSnackbar,
+} from '@hooks'
 import { IPair, StackScreenProps } from '@interfaces'
 import { RootState } from '@store'
 import { resetResultState } from '@store/results'
@@ -12,11 +17,24 @@ import PairSettings from './extra/PairSettings'
 
 const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Pairs'>> =
   () => {
+    const { add } = useSnackbar()
     const dispatch = useDispatch()
+    const { isRegistered, toggle } = useBackgroundTask()
     const { data } = useSelector((state: RootState) => state.pairs)
     const modalRef = useRef<Modalize>(null)
 
     const [selectedPair, setSelectedPair] = useState<IPair | null>(null)
+
+    const changeHandler = () => {
+      dispatch(resetResultState())
+      if (isRegistered && toggle) {
+        toggle()
+        add({
+          id: `task-off-${new Date().getTime()}`,
+          text: 'Фоновый таск был отключен',
+        })
+      }
+    }
 
     const renderTableComponent = () => {
       if (!data.length) return null
@@ -62,9 +80,7 @@ const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Pairs'>> =
           ref={modalRef}
           onClose={() => setSelectedPair(null)}
           pair={selectedPair}
-          onChange={() => {
-            dispatch(resetResultState())
-          }}
+          onChange={changeHandler}
         />
       </ScrollView>
     )
