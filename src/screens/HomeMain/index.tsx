@@ -23,8 +23,7 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
             <DataTable>
               <DataTable.Header>
                 <DataTable.Title>Валютная пара</DataTable.Title>
-                <DataTable.Title numeric>Нижний</DataTable.Title>
-                <DataTable.Title numeric>Верхний</DataTable.Title>
+                <DataTable.Title numeric>Диапазон</DataTable.Title>
                 <DataTable.Title numeric>Текущий</DataTable.Title>
               </DataTable.Header>
 
@@ -39,9 +38,8 @@ const ScreenComponent: FC<StackScreenProps<HomeStackParamList, 'HomeMain'>> =
                   <DataTable.Row key={v.data.uuid}>
                     <DataTable.Cell>{v.text}</DataTable.Cell>
                     <DataTable.Cell numeric>
-                      {v.data.percent.down}
+                      {v.data.percent.down} / {v.data.percent.up}
                     </DataTable.Cell>
-                    <DataTable.Cell numeric>{v.data.percent.up}</DataTable.Cell>
                     <DataTable.Cell numeric>
                       <Text
                         style={{
