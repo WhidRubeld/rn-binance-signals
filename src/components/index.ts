@@ -29,4 +29,5 @@ export {
   Headline,
   List,
   DataTable,
+  ActivityIndicator,
 } from 'react-native-paper'

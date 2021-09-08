@@ -3,11 +3,13 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './auth'
 import HttpInterсeptor from './extra/HttpInterсeptor'
 import permissionsReducer from './permissions'
+import tickReducer from './ticks'
 
 const store = configureStore({
   reducer: {
     permissions: permissionsReducer,
     auth: authReducer,
+    ticks: tickReducer,
   },
 })
 

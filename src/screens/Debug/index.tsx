@@ -1,6 +1,6 @@
 import { AppStackParamList } from '@app/navigation/stack/AppStack'
 import { Subheading, Surface } from '@components'
-import { useSelector, useAppState, useDispatch } from '@hooks'
+import { useSelector, useAppState, useTickSocket } from '@hooks'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootState } from '@store'
 import React, { FC } from 'react'
@@ -10,8 +10,8 @@ import JSONTree from 'react-native-json-tree'
 const ScreenComponent: FC<StackScreenProps<AppStackParamList, 'Debug'>> = ({
   navigation,
 }) => {
-  const dispatch = useDispatch()
   const appState = useAppState()
+  const { status, loading } = useTickSocket()
 
   const reduxState = useSelector((state: RootState) => state)
 
@@ -24,6 +24,10 @@ const ScreenComponent: FC<StackScreenProps<AppStackParamList, 'Debug'>> = ({
       <Subheading>Redux state</Subheading>
       <Surface style={styles.blockButton}>
         <JSONTree data={reduxState as any} />
+      </Surface>
+      <Subheading>Tick socket</Subheading>
+      <Surface style={styles.blockButton}>
+        <JSONTree data={{ status, loading }} />
       </Surface>
     </ScrollView>
   )

@@ -7,6 +7,7 @@ import {
   PaperProvider,
   ReduxProvider,
   SnackbarProvider,
+  TickSocketProvider,
 } from '@providers'
 import { SnackbarRef } from '@refs'
 import Store from '@store'
@@ -40,11 +41,13 @@ export default function Launcher(): ReactElement {
     <PaperProvider theme={theme}>
       <SnackbarProvider ref={SnackbarRef}>
         <ReduxProvider store={Store}>
-          <AppStateProvider>
-            <TaskManager tasks={loadingTasks} initialConfig={defaultConfig}>
-              {(args) => <App args={args} theme={theme} />}
-            </TaskManager>
-          </AppStateProvider>
+          <TickSocketProvider>
+            <AppStateProvider>
+              <TaskManager tasks={loadingTasks} initialConfig={defaultConfig}>
+                {(args) => <App args={args} theme={theme} />}
+              </TaskManager>
+            </AppStateProvider>
+          </TickSocketProvider>
         </ReduxProvider>
         <Snackbar />
       </SnackbarProvider>

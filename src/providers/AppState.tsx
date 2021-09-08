@@ -1,3 +1,5 @@
+import useTickSocket from '@hooks/useTickSocket'
+import { RootState } from '@store'
 import { setPermissions } from '@store/permissions'
 import * as Notifications from 'expo-notifications'
 import React, {
@@ -9,7 +11,7 @@ import React, {
   ReactNode,
 } from 'react'
 import { AppState, AppStateStatus } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 export type AppStateContextValue = {
   foreground: boolean
@@ -27,6 +29,9 @@ export default function AppStateProvider({
   children: ReactNode
 }) {
   const dispatch = useDispatch()
+  const { status, open, close } = useTickSocket()
+  const { token } = useSelector((state: RootState) => state.auth)
+
   const appState = useRef(AppState.currentState)
   const [state, setState] = useState<AppStateContextValue>({
     foreground: appState.current === 'active',
@@ -51,8 +56,22 @@ export default function AppStateProvider({
   }, [])
 
   useEffect(() => {
-    checkPermissions()
+    if (state.foreground) {
+      checkPermissions()
+    }
   }, [state])
+
+  useEffect(() => {
+    if (token) {
+      if (state.foreground) {
+        if (!status) open()
+      } else {
+        if (status) close()
+      }
+    } else {
+      if (status) close()
+    }
+  }, [state, token])
 
   const _handleAppStateChange = (nextAppState: AppStateStatus) => {
     const foreground = !!(
