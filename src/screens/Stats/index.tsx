@@ -4,10 +4,13 @@ import { useTheme } from '@react-navigation/native'
 import React, { FC } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 
+import useCustomHeader from './extra/useCustomHeader'
+
 // TODO
 const ScreenComponent: FC<StackScreenProps<AppStackParamList, 'Stats'>> =
   () => {
     const { colors } = useTheme()
+    useCustomHeader()
 
     return (
       <ScrollView

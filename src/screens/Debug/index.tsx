@@ -1,4 +1,4 @@
-import { RootNavigatorParamList } from '@app/navigation'
+import { AppStackParamList } from '@app/navigation/stack/AppStack'
 import { Subheading, Surface } from '@components'
 import { useSelector, useAppState, useDispatch } from '@hooks'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -7,29 +7,27 @@ import React, { FC } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import JSONTree from 'react-native-json-tree'
 
-const ScreenComponent: FC<StackScreenProps<RootNavigatorParamList, 'Debug'>> =
-  ({ navigation }) => {
-    const dispatch = useDispatch()
-    const appState = useAppState()
+const ScreenComponent: FC<StackScreenProps<AppStackParamList, 'Debug'>> = ({
+  navigation,
+}) => {
+  const dispatch = useDispatch()
+  const appState = useAppState()
 
-    const reduxState = useSelector((state: RootState) => state)
+  const reduxState = useSelector((state: RootState) => state)
 
-    return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}
-      >
-        <Subheading>App state</Subheading>
-        <Surface style={styles.blockButton}>
-          <JSONTree data={appState} />
-        </Surface>
-        <Subheading>Redux state</Subheading>
-        <Surface style={styles.blockButton}>
-          <JSONTree data={reduxState as any} />
-        </Surface>
-      </ScrollView>
-    )
-  }
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Subheading>App state</Subheading>
+      <Surface style={styles.blockButton}>
+        <JSONTree data={appState} />
+      </Surface>
+      <Subheading>Redux state</Subheading>
+      <Surface style={styles.blockButton}>
+        <JSONTree data={reduxState as any} />
+      </Surface>
+    </ScrollView>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -51,7 +49,7 @@ const styles = StyleSheet.create({
 const ScreenParams: any = {
   component: ScreenComponent,
   options: {
-    title: 'Debug',
+    title: 'Тестирование',
   },
 }
 

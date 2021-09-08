@@ -1,14 +1,7 @@
 import { TextInput, Button, HelperText } from '@components'
-import {
-  StackActions,
-  useDispatch,
-  useNavigation,
-  useSelector,
-  useSnackbar,
-} from '@hooks'
-import { RootState } from '@store'
-import { login, profile } from '@store/auth'
-import React, { useMemo, useRef, useState, useCallback, useEffect } from 'react'
+import { StackActions, useDispatch, useNavigation, useSnackbar } from '@hooks'
+import { register } from '@store/auth'
+import React, { useMemo, useRef, useState, useCallback } from 'react'
 import { View, StyleSheet, TextInput as TextInputType } from 'react-native'
 
 import Header from './Header'
@@ -17,13 +10,16 @@ export default function Form() {
   const { add } = useSnackbar()
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  const { token } = useSelector((state: RootState) => state.auth)
 
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('')
 
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false)
+  const [passwordConfirmVisible, setPasswordConfirmVisible] =
+    useState<boolean>(false)
   const PasswordInputRef = useRef<TextInputType>(null)
+  const PasswordConfirmInputRef = useRef<TextInputType>(null)
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -60,47 +56,85 @@ export default function Form() {
           text: 'Пароль должен быть короче или равен 100 символам',
         }
       }
+
+      if (password !== passwordConfirm) {
+        return {
+          status: true,
+          text: 'Пароли не совпадают',
+        }
+      }
     }
 
     return { status: false, text: null }
-  }, [password])
+  }, [password, passwordConfirm])
+
+  const passwordConfirmErrors = useMemo(() => {
+    if (passwordConfirm) {
+      if (passwordConfirm.length < 4) {
+        return {
+          status: true,
+          text: 'Пароль должен быть длинее или равен 4 символам',
+        }
+      }
+      if (passwordConfirm.length > 100) {
+        return {
+          status: true,
+          text: 'Пароль должен быть короче или равен 100 символам',
+        }
+      }
+
+      if (password !== passwordConfirm) {
+        return {
+          status: true,
+          text: 'Пароли не совпадают',
+        }
+      }
+    }
+
+    return { status: false, text: null }
+  }, [password, passwordConfirm])
 
   const submitDisabled = useMemo(() => {
     if (
       !username ||
       !password ||
       usernameErrors.status ||
-      passwordErrors.status
+      passwordErrors.status ||
+      passwordConfirmErrors.status
     ) {
       return true
     }
     return false
-  }, [username, password, usernameErrors, passwordErrors])
+  }, [
+    username,
+    password,
+    usernameErrors,
+    passwordErrors,
+    passwordConfirmErrors,
+  ])
 
   const onSubmit = useCallback(() => {
     if (loading || submitDisabled) return
     setLoading(true)
-    dispatch(login({ username, password })).then((res) => {
-      setLoading(false)
-    })
-  }, [loading, submitDisabled, username, password])
-
-  useEffect(() => {
-    if (token) {
-      navigation.dispatch(StackActions.replace('App'))
-      add({
-        id: 'login-complete',
-        text: 'Добро пожаловать!',
+    dispatch(register({ username, password }))
+      .unwrap()
+      .then(() => {
+        navigation.dispatch(StackActions.replace('Login'))
+        add({
+          id: 'register-complete',
+          text: 'Аккаунт успешно создан',
+        })
       })
-      dispatch(profile())
-    }
-  }, [token, navigation, add, dispatch])
+      .catch(() => {
+        setLoading(false)
+      })
+  }, [loading, submitDisabled, username, password])
 
   return (
     <View style={styles.container}>
       <Header />
       <TextInput
-        label="Ваш логин"
+        label="Придумайте логин"
         mode="outlined"
         error={usernameErrors.status}
         value={username}
@@ -119,7 +153,7 @@ export default function Form() {
       </HelperText>
       <TextInput
         ref={PasswordInputRef}
-        label="Ваш пароль"
+        label="Придумайте пароль"
         mode="outlined"
         error={passwordErrors.status}
         right={
@@ -133,8 +167,8 @@ export default function Form() {
         secureTextEntry={!passwordVisible}
         value={password}
         onChangeText={setPassword}
-        returnKeyType="send"
-        onSubmitEditing={onSubmit}
+        returnKeyType="next"
+        onSubmitEditing={() => PasswordConfirmInputRef.current?.focus()}
         disabled={loading}
       />
       <HelperText
@@ -144,6 +178,33 @@ export default function Form() {
       >
         {passwordErrors.text}
       </HelperText>
+      <TextInput
+        ref={PasswordConfirmInputRef}
+        label="Подтвердите пароль"
+        mode="outlined"
+        error={passwordConfirmErrors.status}
+        right={
+          <TextInput.Icon
+            name={passwordConfirmVisible ? 'eye-off' : 'eye'}
+            disabled={loading}
+            onPress={() => setPasswordConfirmVisible((v: boolean) => !v)}
+          />
+        }
+        autoCapitalize="none"
+        secureTextEntry={!passwordConfirmVisible}
+        value={passwordConfirm}
+        onChangeText={setPasswordConfirm}
+        returnKeyType="send"
+        onSubmitEditing={onSubmit}
+        disabled={loading}
+      />
+      <HelperText
+        type="error"
+        visible={passwordConfirmErrors.status}
+        style={styles.helperText}
+      >
+        {passwordConfirmErrors.text}
+      </HelperText>
       <Button
         mode="contained"
         style={styles.submitButton}
@@ -151,17 +212,17 @@ export default function Form() {
         loading={loading}
         onPress={onSubmit}
       >
-        {loading ? 'Ожидайте' : 'Войти'}
+        {loading ? 'Ожидайте' : 'Зарегистрироваться'}
       </Button>
       <Button
         mode="outlined"
         style={styles.registerButton}
         disabled={loading}
         onPress={() => {
-          navigation.dispatch(StackActions.replace('Register'))
+          navigation.dispatch(StackActions.replace('Login'))
         }}
       >
-        Регистрация
+        Войти в аккаунт
       </Button>
     </View>
   )

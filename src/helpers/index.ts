@@ -37,8 +37,8 @@ export const toLocalTime = (p: string) => {
   return moment.tz(p, 'Etc/GMT').local()
 }
 
-export const unix2time = (time: number) => {
-  return moment.unix(time).tz('Etc/GMT').local().format('DD/MM/YYYY HH:mm:ss')
+export const unix2time = (time: number, format: string) => {
+  return moment.unix(time).tz('Etc/GMT').local().format(format)
 }
 
 export const avg = (arr: number[], idx: number, range: number) => {

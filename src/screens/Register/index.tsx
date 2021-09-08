@@ -9,7 +9,7 @@ import { StyleSheet, ScrollView } from 'react-native'
 import Form from './extra/Form'
 
 // TODO
-const ScreenComponent: FC<StackScreenProps<AuthStackParamList, 'Login'>> = ({
+const ScreenComponent: FC<StackScreenProps<AuthStackParamList, 'Register'>> = ({
   navigation,
 }) => {
   const { colors } = useTheme()
@@ -52,7 +52,7 @@ const useStyles = (insets: EdgeInsets, colors: any) => {
 const ScreenParams: any = {
   component: ScreenComponent,
   options: {
-    title: 'Вход в аккаунт',
+    title: 'Регистрация',
   },
 }
 

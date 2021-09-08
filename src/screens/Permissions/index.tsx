@@ -1,4 +1,4 @@
-import { SettingStackParamList } from '@app/navigation/stack/SettingStack'
+import { AppStackParamList } from '@app/navigation/stack/AppStack'
 import { Card, List, Text } from '@components'
 import { isIOS } from '@constants'
 import { useDispatch, useSelector } from '@hooks'
@@ -20,67 +20,69 @@ enum PermissionText {
   denied = 'Запрещено',
 }
 
-const ScreenComponent: FC<
-  StackScreenProps<SettingStackParamList, 'Permissions'>
-> = ({ navigation }) => {
-  const { colors } = useTheme()
+const ScreenComponent: FC<StackScreenProps<AppStackParamList, 'Permissions'>> =
+  ({ navigation }) => {
+    const { colors } = useTheme()
 
-  const dispatch = useDispatch()
-  const { data } = useSelector((state: RootState) => state.permissions)
-  const { notifications } = data
+    const dispatch = useDispatch()
+    const { data } = useSelector((state: RootState) => state.permissions)
+    const { notifications } = data
 
-  const openSettingsHandler = useCallback(() => {
-    if (isIOS) Linking.openURL('app-settings:')
-    else {
-      IntentLauncher.startActivityAsync(
-        IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS,
-        { data: 'package:' + pkg }
+    const openSettingsHandler = useCallback(() => {
+      if (isIOS) Linking.openURL('app-settings:')
+      else {
+        IntentLauncher.startActivityAsync(
+          IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS,
+          { data: 'package:' + pkg }
+        )
+      }
+    }, [])
+
+    const pressNotificationHandler = useCallback(() => {
+      if (!notifications || notifications.status === 'undetermined') {
+        requestNotificationPermission()
+      } else {
+        openSettingsHandler()
+      }
+    }, [notifications])
+
+    const requestNotificationPermission = useCallback(async () => {
+      const state = await Notifications.requestPermissionsAsync()
+      dispatch(setNotificationPermission(state))
+    }, [])
+
+    const renderNotificationPermission = () => {
+      return (
+        <List.Item
+          title="Оповещения"
+          description="Для отправки локальных оповещений, пока приложение в работает в фоновом режиме"
+          onPress={pressNotificationHandler}
+          right={() => {
+            return (
+              <View style={styles.info}>
+                <Text style={{ color: colors.primary }}>
+                  {notifications
+                    ? PermissionText[notifications.status]
+                    : 'Не определен'}
+                </Text>
+              </View>
+            )
+          }}
+        />
       )
     }
-  }, [])
 
-  const pressNotificationHandler = useCallback(() => {
-    if (!notifications || notifications.status === 'undetermined') {
-      requestNotificationPermission()
-    } else {
-      openSettingsHandler()
-    }
-  }, [notifications])
-
-  const requestNotificationPermission = useCallback(async () => {
-    const state = await Notifications.requestPermissionsAsync()
-    dispatch(setNotificationPermission(state))
-  }, [])
-
-  const renderNotificationPermission = () => {
     return (
-      <List.Item
-        title="Оповещения"
-        description="Для отправки локальных оповещений, пока приложение в работает в фоновом режиме"
-        onPress={pressNotificationHandler}
-        right={() => {
-          return (
-            <View style={styles.info}>
-              <Text style={{ color: colors.primary }}>
-                {notifications
-                  ? PermissionText[notifications.status]
-                  : 'Не определен'}
-              </Text>
-            </View>
-          )
-        }}
-      />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+      >
+        <Card>
+          <List.Section>{renderNotificationPermission()}</List.Section>
+        </Card>
+      </ScrollView>
     )
   }
-
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Card>
-        <List.Section>{renderNotificationPermission()}</List.Section>
-      </Card>
-    </ScrollView>
-  )
-}
 
 const styles = StyleSheet.create({
   container: {
