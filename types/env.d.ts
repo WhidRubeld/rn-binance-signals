@@ -1,4 +1,5 @@
 declare module '@env' {
-  export const API_URL: string
-  export const BACKGROUND_FETCH_TASK: string
+  export const MODE: string
+  export const DEV_API_URL: string
+  export const PROD_API_URL: string
 }

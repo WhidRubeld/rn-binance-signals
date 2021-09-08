@@ -1,12 +1,12 @@
-import { IPair } from '@interfaces'
-import { StorageService } from '@services'
+import { IProfile } from '@interfaces'
+import { StorageService, HttpService, ApiService } from '@services'
 
 import { ITask } from './extra/TaskManager'
 
 export const defaultConfig: {
-  pairs: IPair[]
+  auth: { profile: IProfile; token: string } | null
 } = {
-  pairs: [],
+  auth: null,
 }
 
 export const loadingTasks: ITask[] = [
@@ -15,11 +15,19 @@ export const loadingTasks: ITask[] = [
     launch: () => {
       return new Promise(async (resolve) => {
         try {
-          const pairs = await StorageService.getPairs()
-          resolve(['pairs', pairs])
+          const token = await StorageService.getToken()
+          if (!token) {
+            resolve(['auth', null])
+          } else {
+            HttpService.setToken(token)
+            const profile = await ApiService.profile()
+            resolve(['auth', { profile, token }])
+          }
         } catch (e) {
           console.warn(e)
-          resolve(['pairs', []])
+          HttpService.removeToken()
+          StorageService.removeToken()
+          resolve(['auth', null])
         }
       })
     },

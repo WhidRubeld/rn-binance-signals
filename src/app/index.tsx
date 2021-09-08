@@ -7,23 +7,24 @@ import {
   PaperProvider,
   ReduxProvider,
   SnackbarProvider,
-  BackgroundTaskProvider,
 } from '@providers'
 import { SnackbarRef } from '@refs'
 import Store from '@store'
-import { setPairs } from '@store/pairs'
+import { setAuthState } from '@store/auth'
 import React, { ReactElement, useLayoutEffect, useMemo } from 'react'
 
 import TaskManager, { ResultType } from './extra/TaskManager'
 import { defaultConfig, loadingTasks } from './tasks'
 
 function App({ args, theme }: { args: ResultType; theme: any }) {
-  const { pairs } = args
+  const { auth } = args
 
   const dispatch = useDispatch()
 
   useLayoutEffect(() => {
-    dispatch(setPairs(pairs))
+    if (auth) {
+      dispatch(setAuthState(auth))
+    }
   }, [])
 
   return <Navigator theme={theme} />
@@ -39,13 +40,11 @@ export default function Launcher(): ReactElement {
     <PaperProvider theme={theme}>
       <SnackbarProvider ref={SnackbarRef}>
         <ReduxProvider store={Store}>
-          <BackgroundTaskProvider>
-            <AppStateProvider>
-              <TaskManager tasks={loadingTasks} initialConfig={defaultConfig}>
-                {(args) => <App args={args} theme={theme} />}
-              </TaskManager>
-            </AppStateProvider>
-          </BackgroundTaskProvider>
+          <AppStateProvider>
+            <TaskManager tasks={loadingTasks} initialConfig={defaultConfig}>
+              {(args) => <App args={args} theme={theme} />}
+            </TaskManager>
+          </AppStateProvider>
         </ReduxProvider>
         <Snackbar />
       </SnackbarProvider>

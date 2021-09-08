@@ -1,55 +1,35 @@
-import { SettingStackParamList } from '@app/navigation/stack/SettingStack'
-import { Subheading, Surface, Button } from '@components'
-import {
-  useSelector,
-  useAppState,
-  useBackgroundTask,
-  useDispatch,
-} from '@hooks'
+import { RootNavigatorParamList } from '@app/navigation'
+import { Subheading, Surface } from '@components'
+import { useSelector, useAppState, useDispatch } from '@hooks'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootState } from '@store'
-import { resetPairState } from '@store/pairs'
-import { resetResultState } from '@store/results'
 import React, { FC } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import JSONTree from 'react-native-json-tree'
 
-const ScreenComponent: FC<StackScreenProps<SettingStackParamList, 'Debug'>> = ({
-  navigation,
-}) => {
-  const dispatch = useDispatch()
-  const appState = useAppState()
-  const { isRegistered, status } = useBackgroundTask()
+const ScreenComponent: FC<StackScreenProps<RootNavigatorParamList, 'Debug'>> =
+  ({ navigation }) => {
+    const dispatch = useDispatch()
+    const appState = useAppState()
 
-  const reduxState = useSelector((state: RootState) => state)
+    const reduxState = useSelector((state: RootState) => state)
 
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Button
-        mode="contained"
-        style={styles.blockButton}
-        onPress={() => {
-          dispatch(resetResultState())
-          dispatch(resetPairState())
-        }}
+    return (
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
       >
-        Сбросить состояние
-      </Button>
-      <Subheading>App state</Subheading>
-      <Surface style={styles.blockButton}>
-        <JSONTree data={appState} />
-      </Surface>
-      <Subheading>Redux state</Subheading>
-      <Surface style={styles.blockButton}>
-        <JSONTree data={reduxState as any} />
-      </Surface>
-      <Subheading>Background task state</Subheading>
-      <Surface style={styles.blockButton}>
-        <JSONTree data={{ isRegistered, status }} />
-      </Surface>
-    </ScrollView>
-  )
-}
+        <Subheading>App state</Subheading>
+        <Surface style={styles.blockButton}>
+          <JSONTree data={appState} />
+        </Surface>
+        <Subheading>Redux state</Subheading>
+        <Surface style={styles.blockButton}>
+          <JSONTree data={reduxState as any} />
+        </Surface>
+      </ScrollView>
+    )
+  }
 
 const styles = StyleSheet.create({
   container: {

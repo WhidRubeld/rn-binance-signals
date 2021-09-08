@@ -1,5 +1,8 @@
 import { SnackbarRef, SnackbarTypes } from '@refs'
+import { AppDispatch } from '@store'
 import axios, { AxiosResponse, AxiosError } from 'axios'
+
+import { resetGlobalState } from './resetGlobalState'
 
 const SnackbarEmmitier = (error: any) => {
   let text: any = 'Во время выполнения запроса произошла ошибка'
@@ -14,14 +17,18 @@ const SnackbarEmmitier = (error: any) => {
   })
 }
 
-const launch = () => {
+const connect = (dispatch: AppDispatch) => {
   axios.interceptors.response.use(
     (next: AxiosResponse) => {
       return Promise.resolve(next)
     },
     async (error: AxiosError) => {
       if (error.config && error.response) {
-        if (error.response.status !== 404) {
+        if (error.response.status === 401) {
+          resetGlobalState(dispatch)
+          SnackbarEmmitier('Время жизни токена доступа истекло')
+          return Promise.reject(error)
+        } else if (error.response.status !== 404) {
           SnackbarEmmitier(error)
         }
       }
@@ -30,4 +37,6 @@ const launch = () => {
   )
 }
 
-export { launch }
+export default {
+  connect,
+}

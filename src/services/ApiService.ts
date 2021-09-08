@@ -1,36 +1,54 @@
-import { API_URL } from '@env'
-import { convertKline } from '@helpers'
-import { ICandlestick, IPair, _candlestick, _interval } from '@interfaces'
+import { MODE, DEV_API_URL, PROD_API_URL } from '@env'
+import { AuthForm, IAuth, IProfile } from '@interfaces'
 import axios from 'axios'
 
-export type PairKlinesResult = {
-  pair: IPair
-  result: ICandlestick[]
-  timestamp: number
+const API_URL = MODE === 'development' ? DEV_API_URL : PROD_API_URL
+
+const Routers = {
+  login: `${API_URL}/auth/login`,
+  register: `${API_URL}/auth/register`,
+  profile: `${API_URL}/user/me`,
 }
-export default class ApiService {
-  static async getPairKlines(
-    pair: IPair,
-    interval: _interval = '4h',
-    limit: number = 25
-  ): Promise<PairKlinesResult> {
-    return new Promise<PairKlinesResult>((resolve, reject) => {
+
+export class HttpService {
+  static setToken(token: string): void {
+    axios.defaults.headers.common.Authorization = `Bearer ${token}`
+  }
+
+  static removeToken(): void {
+    delete axios.defaults.headers.common.Authorization
+  }
+
+  static getToken(): string | null {
+    return axios.defaults.headers.common.Authorization
+  }
+}
+
+export class ApiService {
+  static async login(form: AuthForm): Promise<IAuth> {
+    return new Promise<IAuth>((resolve, reject) => {
       axios
-        .get(`${API_URL}/klines`, {
-          params: {
-            symbol: `${pair.first}${pair.second}`.toUpperCase(),
-            interval,
-            limit,
-          },
-        })
-        .then(({ data }: { data: _candlestick[] }) => {
-          return resolve({
-            pair,
-            result: data.map(convertKline),
-            timestamp: new Date().getTime() / 1e3,
-          })
-        })
-        .catch(reject)
+        .post(Routers.login, form)
+        .then(({ data }) => resolve(data))
+        .catch((err) => reject(err))
+    })
+  }
+
+  static async register(form: AuthForm): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      axios
+        .post(Routers.register, form)
+        .then(() => resolve())
+        .catch((err) => reject(err))
+    })
+  }
+
+  static async profile(): Promise<IProfile> {
+    return new Promise<IProfile>((resolve, reject) => {
+      axios
+        .get(Routers.profile)
+        .then(({ data }) => resolve(data))
+        .catch((err) => reject(err))
     })
   }
 }

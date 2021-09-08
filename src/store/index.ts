@@ -1,18 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import pairReducer from './pairs'
+import authReducer from './auth'
+import HttpInterсeptor from './extra/HttpInterсeptor'
 import permissionsReducer from './permissions'
-import resultReducer from './results'
 
 const store = configureStore({
   reducer: {
     permissions: permissionsReducer,
-    pairs: pairReducer,
-    results: resultReducer,
+    auth: authReducer,
   },
 })
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+HttpInterсeptor.connect(store.dispatch)
 
 export default store

@@ -1,5 +1,4 @@
 import { setPermissions } from '@store/permissions'
-import { refreshResults } from '@store/results'
 import * as Notifications from 'expo-notifications'
 import React, {
   useEffect,
@@ -53,7 +52,6 @@ export default function AppStateProvider({
 
   useEffect(() => {
     checkPermissions()
-    dispatch(refreshResults())
   }, [state])
 
   const _handleAppStateChange = (nextAppState: AppStateStatus) => {

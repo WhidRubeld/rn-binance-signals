@@ -1,7 +1,8 @@
 export { StackScreenProps } from '@react-navigation/stack'
 export { IPermissions } from './IPermissions'
 export { IPair } from './IPair'
-export { IResult } from './IResult'
+export { IProfile } from './IProfile'
+export { IAuth, AuthForm } from './IAuth'
 
 export type _interval = keyof {
   '1m': never
