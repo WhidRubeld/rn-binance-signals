@@ -1,5 +1,5 @@
 import { MODE, DEV_API_URL, PROD_API_URL } from '@env'
-import { AuthForm, IAuth, IProfile } from '@interfaces'
+import { AuthForm, IAuth, IProfile, PasswordForm } from '@interfaces'
 import axios from 'axios'
 
 const API_URL = MODE === 'development' ? DEV_API_URL : PROD_API_URL
@@ -8,6 +8,7 @@ const Routers = {
   login: `${API_URL}/auth/login`,
   register: `${API_URL}/auth/register`,
   profile: `${API_URL}/user/me`,
+  passwordChange: `${API_URL}/user/password-change`,
 }
 
 export class HttpService {
@@ -47,6 +48,15 @@ export class ApiService {
     return new Promise<IProfile>((resolve, reject) => {
       axios
         .get(Routers.profile)
+        .then(({ data }) => resolve(data))
+        .catch((err) => reject(err))
+    })
+  }
+
+  static async passwordChange(form: PasswordForm): Promise<IProfile> {
+    return new Promise<IProfile>((resolve, reject) => {
+      axios
+        .post(Routers.passwordChange, form)
         .then(({ data }) => resolve(data))
         .catch((err) => reject(err))
     })

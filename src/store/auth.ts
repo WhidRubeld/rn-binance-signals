@@ -1,4 +1,4 @@
-import { AuthForm, IProfile } from '@interfaces'
+import { AuthForm, IProfile, PasswordForm } from '@interfaces'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ApiService, HttpService, StorageService } from '@services'
 
@@ -50,6 +50,18 @@ export const profile = createAsyncThunk(
   }
 )
 
+export const passwordChange = createAsyncThunk(
+  'auth/passwordChange',
+  async (payload: PasswordForm, { rejectWithValue }) => {
+    try {
+      return await ApiService.passwordChange(payload)
+    } catch (e) {
+      console.warn(e)
+      return rejectWithValue('Error')
+    }
+  }
+)
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -81,6 +93,9 @@ export const authSlice = createSlice({
       StorageService.setToken(payload.access_token)
     })
     builder.addCase(profile.fulfilled, (state, { payload }) => {
+      state.profile = payload
+    })
+    builder.addCase(passwordChange.fulfilled, (state, { payload }) => {
       state.profile = payload
     })
   },

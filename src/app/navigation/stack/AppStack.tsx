@@ -1,3 +1,4 @@
+import ChangePasswordScreen from '@screens/ChangePassword'
 import DebugScreen from '@screens/Debug'
 import PermissionScreen from '@screens/Permissions'
 import SettingScreen from '@screens/Settings'
@@ -10,6 +11,7 @@ export type AppStackParamList = {
   Debug: undefined
   Settings: undefined
   Permissions: undefined
+  ChangePassword: undefined
 }
 
 const Stack = createNativeStackNavigator<AppStackParamList>()
@@ -21,6 +23,7 @@ export default function AppStack(): ReactElement {
       <Stack.Screen name="Debug" {...DebugScreen} />
       <Stack.Screen name="Settings" {...SettingScreen} />
       <Stack.Screen name="Permissions" {...PermissionScreen} />
+      <Stack.Screen name="ChangePassword" {...ChangePasswordScreen} />
     </Stack.Navigator>
   )
 }

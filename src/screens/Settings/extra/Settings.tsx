@@ -52,6 +52,12 @@ const Settings = () => {
     <Card style={styles.card}>
       <List.Section>
         <List.Item
+          title="Сменить пароль"
+          description="Изменить пароль для входа в аккаунт"
+          right={(props) => <ListIcon {...props} />}
+          onPress={() => navigation.navigate('ChangePassword')}
+        />
+        <List.Item
           title="Права доступа"
           description="Настройка прав доступа для корректной работы приложения"
           right={(props) => (
