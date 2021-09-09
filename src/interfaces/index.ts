@@ -8,5 +8,6 @@ export {
   _interval,
   TickResponseType,
   TickResponseInitial,
+  TickResponseCreate,
   TickResponseUpdate,
 } from './ICandlestick'

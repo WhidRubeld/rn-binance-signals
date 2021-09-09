@@ -39,10 +39,18 @@ export interface ITick {
 export enum TickResponseType {
   add = 'add',
   refresh = 'refresh',
+  update = 'update',
+}
+
+export interface TickResponseCreate {
+  type: TickResponseType.add
+  pair: IPair
+  interval: _interval
+  tick: ITick
 }
 
 export interface TickResponseUpdate {
-  type: TickResponseType.add
+  type: TickResponseType.update
   pair: IPair
   interval: _interval
   tick: ITick

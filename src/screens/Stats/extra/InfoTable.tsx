@@ -54,7 +54,7 @@ export default function InfoTable() {
                       fontWeight: 'bold',
                     }}
                   >
-                    {v.force !== null ? `${v.force.toFixed(3)}` : '-'}
+                    {v.force !== null ? `${v.force.toFixed(5)}` : '-'}
                   </Text>
                 </DataTable.Cell>
               </DataTable.Row>
@@ -83,7 +83,7 @@ export default function InfoTable() {
                       fontWeight: 'bold',
                     }}
                   >
-                    {v.force !== null ? `${v.force.toFixed(3)}` : '-'}
+                    {v.force !== null ? `${v.force.toFixed(5)}` : '-'}
                   </Text>
                 </DataTable.Cell>
               </DataTable.Row>
