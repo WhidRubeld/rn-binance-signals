@@ -23,7 +23,7 @@ export default function InfoTable() {
         <DataTable>
           <DataTable.Header>
             <DataTable.Title>Валютная пара</DataTable.Title>
-            <DataTable.Title numeric>Тяга</DataTable.Title>
+            <DataTable.Title numeric>Сила тяги</DataTable.Title>
           </DataTable.Header>
 
           {res.map((v) => {
