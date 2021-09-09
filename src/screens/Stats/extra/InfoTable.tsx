@@ -70,7 +70,7 @@ export default function InfoTable() {
       </Text>
       {updatedAt && (
         <Text style={styles.infoText}>
-          Посл. обновление - {unix2time(updatedAt, 'DD MMM HH:mm:ss')}
+          Посл. обновление - {unix2time(updatedAt / 1e3, 'DD MMM HH:mm:ss')}
         </Text>
       )}
       {status && (
