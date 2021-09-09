@@ -1,5 +1,5 @@
 import { AppStackParamList } from '@app/navigation/stack/AppStack'
-import { EdgeInsets, useSafeAreaInsets } from '@hooks'
+import { EdgeInsets, useSafeAreaInsets, useKeepAwake } from '@hooks'
 import { StackScreenProps } from '@interfaces'
 import React, { FC } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
@@ -10,6 +10,7 @@ import useCustomHeader from './extra/useCustomHeader'
 // TODO
 const ScreenComponent: FC<StackScreenProps<AppStackParamList, 'Stats'>> =
   () => {
+    useKeepAwake()
     const insets = useSafeAreaInsets()
     const styles = useStyles(insets)
     useCustomHeader()

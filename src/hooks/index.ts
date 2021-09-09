@@ -9,6 +9,7 @@ export {
 } from '@react-navigation/native'
 export { useSafeAreaInsets, EdgeInsets } from 'react-native-safe-area-context'
 export { useSelector } from 'react-redux'
+export { useKeepAwake } from 'expo-keep-awake'
 
 export { default as useSnackbar } from './useSnackbar'
 export { SnackbarTypes } from './useSnackbar'
