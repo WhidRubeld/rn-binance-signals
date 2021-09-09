@@ -1,7 +1,12 @@
+import { MODE, DEV_SOCKET_URL, PROD_SOCKET_URL } from '@env'
 import useSnackbar, { SnackbarTypes } from '@hooks/useSnackbar'
 import { setResponse } from '@store/ticks'
 import React, { useState, createContext, ReactNode, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+
+const SOCKET_URL = `${
+  MODE === 'development' ? DEV_SOCKET_URL : PROD_SOCKET_URL
+}/echo`
 
 export type TickSockerContextValue = {
   status: boolean
@@ -31,7 +36,7 @@ export default function TickSocketProvider({
 
   const open = useCallback(() => {
     if (!socket) {
-      const ws = new WebSocket('ws://localhost:3000/echo')
+      const ws = new WebSocket(SOCKET_URL)
       setLoading(true)
 
       ws.onmessage = (e) => {
