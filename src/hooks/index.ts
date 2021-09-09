@@ -18,5 +18,6 @@ export { default as useAppState } from './useAppState'
 export { default as useTickSocket } from './useTickSocket'
 export { default as useIntervalTicks } from './useIntervalTicks'
 export { default as useTractionForce } from './useTractionForce'
+export { default as useForceTrends } from './useForceTrends'
 
 export const useDispatch = () => useDefaultDispatch<AppDispatch>()

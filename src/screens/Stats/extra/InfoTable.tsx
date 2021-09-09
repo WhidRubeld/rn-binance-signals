@@ -1,6 +1,11 @@
-import { ActivityIndicator, Card, DataTable, Text } from '@components'
+import { ActivityIndicator, Card, DataTable, Text, Title } from '@components'
 import { unix2time } from '@helpers'
-import { useTheme, useTickSocket, useTractionForce } from '@hooks'
+import {
+  useForceTrends,
+  useTheme,
+  useTickSocket,
+  useTractionForce,
+} from '@hooks'
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
@@ -15,31 +20,66 @@ export default function InfoTable() {
     return Math.abs(a.force || 0) - Math.abs(b.force || 0)
   })
 
+  const trends = useForceTrends(res)
+
+  const forceColor = (force: number | null) => {
+    if (force === null) return colors.text
+    if (force > 0) return 'green'
+    if (force < 0) return 'red'
+    return 'orange'
+  }
+
   if (!res.length) return null
 
   return (
     <>
+      <Title style={styles.title} numberOfLines={1}>
+        Тренд MA (4 ч.)
+      </Title>
+      <Card style={styles.table}>
+        <DataTable>
+          <DataTable.Header>
+            <DataTable.Title>Валюта</DataTable.Title>
+            <DataTable.Title numeric>Сила тяги</DataTable.Title>
+          </DataTable.Header>
+
+          {trends.map((v) => {
+            return (
+              <DataTable.Row key={v.currency}>
+                <DataTable.Cell>{v.currency}</DataTable.Cell>
+                <DataTable.Cell numeric>
+                  <Text
+                    style={{
+                      color: forceColor(v.force),
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {v.force !== null ? `${v.force.toFixed(3)}` : '-'}
+                  </Text>
+                </DataTable.Cell>
+              </DataTable.Row>
+            )
+          })}
+        </DataTable>
+      </Card>
+      <Title style={styles.title} numberOfLines={1}>
+        Тренды по парам (4 ч.)
+      </Title>
       <Card style={styles.table}>
         <DataTable>
           <DataTable.Header>
             <DataTable.Title>Валютная пара</DataTable.Title>
-            <DataTable.Title numeric>Сила тяги (4h)</DataTable.Title>
+            <DataTable.Title numeric>Сила тяги</DataTable.Title>
           </DataTable.Header>
 
           {res.map((v) => {
-            const color = () => {
-              if (v.force === null) return colors.text
-              if (v.force > 0) return 'green'
-              if (v.force < 0) return 'red'
-              return 'orange'
-            }
             return (
               <DataTable.Row key={v.pair.symbol}>
                 <DataTable.Cell>{v.pair.symbol}</DataTable.Cell>
                 <DataTable.Cell numeric>
                   <Text
                     style={{
-                      color: color(),
+                      color: forceColor(v.force),
                       fontWeight: 'bold',
                     }}
                   >
@@ -83,6 +123,11 @@ export default function InfoTable() {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    fontWeight: '200',
+    marginTop: 10,
+    marginBottom: 5,
+  },
   table: {
     position: 'relative',
     marginBottom: 5,
