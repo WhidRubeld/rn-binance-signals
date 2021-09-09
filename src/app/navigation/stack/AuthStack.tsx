@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from 'react-native-screens/native-stack'
 
 export type AuthStackParamList = {
   Login: undefined
+  Register: undefined
 }
 
 const Stack = createNativeStackNavigator<AuthStackParamList>()
