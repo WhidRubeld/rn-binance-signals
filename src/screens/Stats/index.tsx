@@ -4,22 +4,22 @@ import { StackScreenProps } from '@interfaces'
 import React, { FC } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 
-import InfoTable from './extra/InfoTable'
+import Content from './extra/Content'
 import useCustomHeader from './extra/useCustomHeader'
 
 // TODO
 const ScreenComponent: FC<StackScreenProps<AppStackParamList, 'Stats'>> =
   () => {
     useKeepAwake()
+    useCustomHeader()
     const insets = useSafeAreaInsets()
     const styles = useStyles(insets)
-    useCustomHeader()
     return (
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
       >
-        <InfoTable />
+        <Content />
       </ScrollView>
     )
   }
