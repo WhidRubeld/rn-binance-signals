@@ -19,10 +19,7 @@
     "ios": {
       "bundleIdentifier": "dev.whidrubeld.binance",
       "buildNumber": "1",
-      "supportsTablet": true,
-      "infoPlist": {
-        "UIBackgroundModes": ["fetch"]
-      }
+      "supportsTablet": true
     },
     "android": {
       "package": "dev.whidrubeld.binance",
