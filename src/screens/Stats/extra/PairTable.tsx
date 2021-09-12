@@ -1,6 +1,12 @@
-import { ActivityIndicator, Card, DataTable, Text, Title } from '@components'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { useTheme, useTickSocket } from '@hooks'
+import {
+  ActivityIndicator,
+  Card,
+  DataTable,
+  Text,
+  Title,
+  Colors,
+} from '@components'
+import { useColorScheme, useTheme, useTickSocket } from '@hooks'
 import { IPair } from '@interfaces'
 import React, { useState, useCallback, useMemo } from 'react'
 import { View, StyleSheet } from 'react-native'
@@ -22,20 +28,23 @@ const forceColor = (force: number | null) => {
 const PairLine = ({
   info,
 }: {
-  info: { pair: IPair; force: number | null; diff: boolean | null }
+  info: { pair: IPair; force: number | null; diff: boolean }
 }) => {
-  const { colors } = useTheme()
+  const scheme = useColorScheme()
+  const isDark = scheme === 'dark'
+
   return (
-    <DataTable.Row>
+    <DataTable.Row
+      style={
+        info.diff && {
+          backgroundColor: !isDark
+            ? Colors.deepOrange200
+            : Colors.deepOrange300,
+        }
+      }
+    >
       <DataTable.Cell>{info.pair.symbol}</DataTable.Cell>
       <DataTable.Cell numeric>
-        {info.diff !== null && (
-          <MaterialCommunityIcons
-            name={info.diff ? 'arrow-up-thick' : 'arrow-down-thick'}
-            color={colors.disabled}
-            size={14}
-          />
-        )}
         <Text
           style={{
             color: forceColor(info.force),
@@ -52,7 +61,7 @@ const PairLine = ({
 export default function PairsTable({
   res,
 }: {
-  res: { pair: IPair; force: number | null; diff: boolean | null }[]
+  res: { pair: IPair; force: number | null; diff: boolean }[]
 }) {
   const { colors } = useTheme()
   const { loading } = useTickSocket()

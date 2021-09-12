@@ -1,4 +1,4 @@
-import { sma } from '@helpers'
+import { ma } from '@helpers'
 import { _interval } from '@interfaces'
 import { useMemo } from 'react'
 
@@ -19,33 +19,31 @@ export default function useTractionForce({
     return info.map((v) => {
       const { pair, results } = v
       let force = null
-      let diff = null
+      let diff = false
 
       if (results.length >= second) {
-        const one = sma(
-          results.reverse().map((t) => t.close),
+        const one = ma(
+          results.map((t) => t.close),
           first
-        ).pop()
-        const two = sma(
-          results.reverse().map((t) => t.close),
+        )
+
+        const two = ma(
+          results.map((t) => t.close),
           second
-        ).pop()
+        )
 
         if (one && two) {
           force = (one / two - 1) * 100
         }
-
-        const prevOne = sma(
-          results
-            .reverse()
-            .slice(1, first + 1)
-            .map((t) => t.close),
+        const prevOne = ma(
+          results.slice(1, first + 1).map((t) => t.close),
           first
-        ).pop()
+        )
 
-        if (prevOne && one) {
-          if (one > prevOne) diff = true
-          if (one < prevOne) diff = false
+        if (prevOne && one && force) {
+          if ((force > 0 && one < prevOne) || (force < 0 && one > prevOne)) {
+            diff = true
+          }
         }
       }
 
