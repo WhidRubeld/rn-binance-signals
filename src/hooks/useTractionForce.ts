@@ -19,25 +19,40 @@ export default function useTractionForce({
     return info.map((v) => {
       const { pair, results } = v
       let force = null
+      let diff = null
 
       if (results.length >= second) {
-        const firstSma = sma(
+        const one = sma(
           results.reverse().map((t) => t.close),
           first
         ).pop()
-        const secondSma = sma(
+        const two = sma(
           results.reverse().map((t) => t.close),
           second
         ).pop()
 
-        if (firstSma && secondSma) {
-          force = (firstSma / secondSma - 1) * 100
+        if (one && two) {
+          force = (one / two - 1) * 100
+        }
+
+        const prevOne = sma(
+          results
+            .reverse()
+            .slice(1, first + 1)
+            .map((t) => t.close),
+          first
+        ).pop()
+
+        if (prevOne && one) {
+          if (one > prevOne) diff = true
+          if (one < prevOne) diff = false
         }
       }
 
       return {
         pair,
         force,
+        diff,
       }
     })
   }, [info])
