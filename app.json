@@ -24,6 +24,7 @@
     "android": {
       "package": "dev.whidrubeld.binance",
       "versionCode": 1,
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
